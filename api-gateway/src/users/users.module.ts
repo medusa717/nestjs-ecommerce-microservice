@@ -10,7 +10,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'USERS_MICROSERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: 'users-microservice',
           port: 3020,
         },
       },

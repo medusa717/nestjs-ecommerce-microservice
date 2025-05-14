@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-export const UserPatters = {
+export const UserPatterns = {
   FindAll: 'Users.findAll',
   FindOne: 'Users.findOne',
   Create: 'Users.create',
@@ -18,29 +18,32 @@ export class UsersService {
     private readonly usersMicroservice: ClientProxy,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return this.usersMicroservice.send(
-      { cmd: UserPatters.Create },
+      { cmd: UserPatterns.Create },
       createUserDto,
     );
   }
 
-  findAll() {
-    return this.usersMicroservice.send({ cmd: UserPatters.FindAll }, {});
+  findAll({ page, limit, sort, order }) {
+    return this.usersMicroservice.send(
+      { cmd: UserPatterns.FindAll },
+      { page, limit, sort, order },
+    );
   }
 
   findOne(id: number) {
-    return this.usersMicroservice.send({ cmd: UserPatters.FindOne }, id);
+    return this.usersMicroservice.send({ cmd: UserPatterns.FindOne }, id);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersMicroservice.send(
-      { cmd: UserPatters.Update },
-      updateUserDto,
+      { cmd: UserPatterns.Update },
+      { id, updateUserDto },
     );
   }
 
   remove(id: number) {
-    return this.usersMicroservice.send({ cmd: UserPatters.Delete }, id);
+    return this.usersMicroservice.send({ cmd: UserPatterns.Delete }, id);
   }
 }
