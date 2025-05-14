@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CapitalizeNamePipe {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: string): string {
     if (!value || typeof value !== 'string') return value;
 

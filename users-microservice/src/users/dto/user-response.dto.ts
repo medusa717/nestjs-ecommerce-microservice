@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { UserRole } from 'src/common/types/UserTypes';
+import { UserRole } from '../../common/types/UserTypes';
 
 export class UserResponseDto {
   @Expose()

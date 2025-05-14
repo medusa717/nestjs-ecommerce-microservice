@@ -13,29 +13,6 @@ services:
         networks:
             - ecommerce-network
 
-    pgadmin:
-        image: dpage/pgadmin4
-        environment:
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-            PGADMIN_CONFIG_SERVER_MODE: 'False'
-        volumes:
-            - pgadmin:/var/lib/pgadmin
-        ports:
-            - '${PGADMIN_PORT}:80'
-        networks:
-            - ecommerce-network
-        restart: unless-stopped
-
-    mongo:
-        image: mongo
-        ports:
-            - '27017:27017'
-        networks:
-            - ecommerce-network
-        volumes:
-            - mongo-data:/data/db
-
     api-gateway:
         container_name: api-gateway
         build:
@@ -61,11 +38,21 @@ services:
         networks:
             - ecommerce-network
 
+    products-microservice:
+        container_name: products-microservice
+        restart: always
+        build:
+            context: ./products-microservice
+            dockerfile: Dockerfile
+        volumes:
+            - ./products-microservice:/app
+            - /app/node_modules
+        networks:
+            - ecommerce-network
+
 networks:
     ecommerce-network:
         driver: bridge
 
 volumes:
     postgres_data:
-    pgadmin:
-    mongo-data:

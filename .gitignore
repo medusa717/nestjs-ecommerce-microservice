@@ -1,8 +1,11 @@
 api-gateway/node_modules
-api-gateway/dist
-
 users-microservice/node_modules
+products-microservice/node_modules
+
+
+api-gateway/dist
 users-microservice/dist
+products-microservice/dist
 
 # compiled output
 /dist

@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { RpcException } from '@nestjs/microservices';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 
 @Injectable()
@@ -68,6 +67,13 @@ export class UsersService {
         code: 404,
       }); // Check if user exists
 
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  async findByEmail(email: string): Promise<UserResponseDto | null> {
+    const user = await this.userRepository.findOne({ where: { email } });
     return plainToInstance(UserResponseDto, user, {
       excludeExtraneousValues: true,
     });

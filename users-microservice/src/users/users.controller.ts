@@ -1,18 +1,10 @@
-import { Controller, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ParseDatePipe } from '../common/pipes/parseDate';
+import { ParseDatePipe } from 'src/common/pipes/convertDate';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CapitalizeNamePipe } from '../common/pipes/capitalizeName';
-
-export const UserPatterns = {
-  FindAll: 'Users.findAll',
-  FindOne: 'Users.findOne',
-  Create: 'Users.create',
-  Update: 'Users.update',
-  Delete: 'Users.delete',
-};
+import { UserPatterns } from 'src/common/patterns/userPatterns';
+import { CapitalizeNamePipe } from 'src/common/pipes/capitalizeName';
 
 @Controller()
 export class UsersController {
@@ -37,6 +29,11 @@ export class UsersController {
   @MessagePattern({ cmd: UserPatterns.FindOne })
   findOne(@Payload() id: number) {
     return this.usersService.findOne(id);
+  }
+
+  @MessagePattern({ cmd: UserPatterns.FindByEmail })
+  findByEmail(@Payload() email: string) {
+    return this.usersService.findByEmail(email);
   }
 
   @MessagePattern({ cmd: UserPatterns.Update })

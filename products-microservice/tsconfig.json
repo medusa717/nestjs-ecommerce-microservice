@@ -16,10 +16,6 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@ecommerce/common": ["../common/src"],
-      "@ecommerce/common/*": ["../common/src/*"]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }

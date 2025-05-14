@@ -1,9 +1,17 @@
-import { Column, Entity } from 'typeorm';
-import { UserRole } from '../../common/types/UserTypes';
-import { BaseEntity } from 'src/common/entities/BaseEntity';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserRole } from 'src/common/types/UserTypes';
 
 @Entity('users')
-export class User extends BaseEntity {
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   name: string;
 
@@ -21,4 +29,10 @@ export class User extends BaseEntity {
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
