@@ -1,7 +1,8 @@
+import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { PaginatedResponse } from 'src/common/types/PaginatedResponse';
 
 export const ProductPatterns = {
   Create: 'Products.create',
@@ -25,22 +26,45 @@ export class ProductsService {
     );
   }
 
-  findAll({ page, limit, sort, order }) {
-    return this.productsMicroservice.send(
-      { cmd: ProductPatterns.FindAll },
-      { page, limit, sort, order },
+  async getProducts({
+    page,
+    limit,
+    sort,
+    order,
+  }): Promise<PaginatedResponse<[]>> {
+    return firstValueFrom(
+      this.productsMicroservice.send(
+        { cmd: ProductPatterns.FindAll },
+        { page, limit, sort, order },
+      ),
     );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async getProduct(id: number) {
+    return firstValueFrom(
+      this.productsMicroservice.send({ cmd: ProductPatterns.FindOne }, { id }),
+    );
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async createProduct(productDto: CreateProductDto) {
+    return this.productsMicroservice.send(
+      { cmd: ProductPatterns.Create },
+      productDto,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async updateProduct(id: number, product: CreateProductDto) {
+    return firstValueFrom(
+      this.productsMicroservice.send(
+        { cmd: ProductPatterns.Update },
+        { id, product },
+      ),
+    );
+  }
+
+  async deleteProduct(id: number) {
+    return firstValueFrom(
+      this.productsMicroservice.send({ cmd: ProductPatterns.Delete }, { id }),
+    );
   }
 }
