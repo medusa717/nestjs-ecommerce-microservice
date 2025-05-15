@@ -7,14 +7,16 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { UserRole } from 'src/common/types/UserTypes';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
+import { UserRole, UserType } from 'src/common/types/UserTypes';
 import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 
 @Controller('orders')
@@ -38,19 +40,26 @@ export class OrdersController {
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.USER)
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  findOne(
+    @Req() req: Request & { user: UserType },
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    const user = req.user; // User info from the JWT
+    return this.ordersService.findOne(id, user);
   }
 
   @Patch(':id')
   @UseGuards(SuperAdminGuard)
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateOrderDto: UpdateOrderDto,
+  ) {
+    return this.ordersService.update(id, updateOrderDto);
   }
 
   @Delete(':id')
   @UseGuards(SuperAdminGuard)
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.ordersService.remove(id);
   }
 }

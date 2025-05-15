@@ -20,6 +20,7 @@ export class AppController {
   async findOne(
     @Payload() payload: { id: number; user: { id: number; role: UserRole } },
   ) {
+    console.log('payload in findOne', payload);
     const order = await this.appService.findOne(payload.id);
     if (!order)
       throw new RpcException({

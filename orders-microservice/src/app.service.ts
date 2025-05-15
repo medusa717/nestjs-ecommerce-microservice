@@ -25,9 +25,10 @@ export class AppService {
   }
 
   async findOne(id: number): Promise<Order> {
+    console.log('id in findOne', id);
     const order = await this.orderRepository.findOne({
       where: { id },
-      relations: ['user', 'orderItems', 'orderItems.product'],
+      relations: ['orderItems'],
     });
 
     if (!order)
