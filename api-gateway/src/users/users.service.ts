@@ -2,15 +2,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
-export const UserPatterns = {
-  FindAll: 'Users.findAll',
-  FindOne: 'Users.findOne',
-  FindByEmail: 'Users.findByEmail',
-  Create: 'Users.create',
-  Update: 'Users.update',
-  Delete: 'Users.delete',
-};
+import { UserPatterns } from 'src/common/patterns/users.patterns';
 
 @Injectable()
 export class UsersService {

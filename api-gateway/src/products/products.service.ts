@@ -3,14 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateProductDto } from './dto/create-product.dto';
 import { PaginatedResponse } from 'src/common/types/PaginatedResponse';
-
-export const ProductPatterns = {
-  Create: 'Products.create',
-  FindAll: 'Products.findAll',
-  FindOne: 'Products.findOne',
-  Update: 'Products.update',
-  Delete: 'Products.delete',
-};
+import { ProductPatterns } from 'src/common/patterns/products.patterns';
 
 @Injectable()
 export class ProductsService {

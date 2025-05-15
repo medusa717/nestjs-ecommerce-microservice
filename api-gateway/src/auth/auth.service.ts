@@ -3,12 +3,7 @@ import { LoginDto } from './dto/login.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserType } from 'src/common/types/UserTypes';
-
-export const AuthPatterns = {
-  Login: 'Auth.login',
-  FindByEmail: 'Auth.findByEmail',
-  Refresh: 'Auth.refresh',
-};
+import { AuthPatterns } from 'src/common/patterns/auth.patterns';
 
 @Injectable()
 export class AuthService {
