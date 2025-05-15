@@ -12,6 +12,11 @@ services:
             - postgres_data:/var/lib/postgresql/data
         networks:
             - ecommerce-network
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
     api-gateway:
         container_name: api-gateway
@@ -20,12 +25,16 @@ services:
             dockerfile: Dockerfile
         ports:
             - '3000:3000'
-
         volumes:
             - ./api-gateway:/app
             - /app/node_modules
         networks:
             - ecommerce-network
+        depends_on:
+            - users-microservice
+            - auth-microservice
+            - products-microservice
+            - orders-microservice
 
     auth-microservice:
         container_name: auth-microservice
@@ -38,6 +47,11 @@ services:
             - /app/node_modules
         networks:
             - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+            users-microservice:
+                condition: service_started
 
     users-microservice:
         container_name: users-microservice
@@ -49,10 +63,12 @@ services:
             - /app/node_modules
         networks:
             - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
 
     products-microservice:
         container_name: products-microservice
-        restart: always
         build:
             context: ./products-microservice
             dockerfile: Dockerfile
@@ -61,6 +77,23 @@ services:
             - /app/node_modules
         networks:
             - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+    orders-microservice:
+        container_name: orders-microservice
+        build:
+            context: ./orders-microservice
+            dockerfile: Dockerfile
+        volumes:
+            - ./orders-microservice:/app
+            - /app/node_modules
+        networks:
+            - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
 
 networks:
     ecommerce-network:

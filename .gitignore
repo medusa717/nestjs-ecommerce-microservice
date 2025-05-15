@@ -1,12 +1,13 @@
 api-gateway/node_modules
 auth-microservice/node_modules
 users-microservice/node_modules
+orders-microservice/node_modules
 products-microservice/node_modules
-
 
 api-gateway/dist
 auth-microservice/dist
 users-microservice/dist
+orders-microservice/dist
 products-microservice/dist
 
 # compiled output

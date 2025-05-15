@@ -1,9 +1,8 @@
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { Transport } from '@nestjs/microservices';
-import { MicroserviceOptions } from '@nestjs/microservices';
-import { AllExceptionsFilter } from 'src/common/interceptors/rpc-exception.filter';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AllExceptionsFilter } from './common/interceptors/rpc-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -12,10 +11,11 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: '0.0.0.0',
-        port: 3030,
+        port: 3040,
       },
     },
   );
+
   app.useGlobalFilters(new AllExceptionsFilter());
 
   app.useGlobalPipes(
@@ -26,6 +26,6 @@ async function bootstrap() {
     }),
   );
   await app.listen();
-  console.log(`Products microservice is running on port ${3030}`);
+  console.log(`Orders microservice is running on port ${3040}`);
 }
 bootstrap();

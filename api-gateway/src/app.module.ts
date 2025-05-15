@@ -6,9 +6,10 @@ import { UsersModule } from './users/users.module';
 import { ResponseInterceptor } from './common/interceptors/transform-response.interceptor';
 import { ProductsModule } from './products/products.module';
 import { AuthModule } from './auth/auth.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  imports: [UsersModule, ProductsModule, AuthModule],
+  imports: [UsersModule, ProductsModule, AuthModule, OrdersModule],
   controllers: [AppController],
   providers: [
     AppService,

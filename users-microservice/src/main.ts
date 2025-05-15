@@ -11,7 +11,7 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: '0.0.0.0',
-        port: 3020,
+        port: 3010,
       },
     },
   );
@@ -26,6 +26,6 @@ async function bootstrap() {
     }),
   );
   await app.listen();
-  console.log(`Users microservice is running on port ${3020}`);
+  console.log(`Users microservice is running on port ${3010}`);
 }
 bootstrap();
