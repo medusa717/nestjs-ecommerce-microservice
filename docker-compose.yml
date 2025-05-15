@@ -27,6 +27,18 @@ services:
         networks:
             - ecommerce-network
 
+    auth-microservice:
+        container_name: auth-microservice
+        restart: always
+        build:
+            context: ./auth-microservice
+            dockerfile: Dockerfile
+        volumes:
+            - ./auth-microservice:/app
+            - /app/node_modules
+        networks:
+            - ecommerce-network
+
     users-microservice:
         container_name: users-microservice
         build:

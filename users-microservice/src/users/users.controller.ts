@@ -27,12 +27,12 @@ export class UsersController {
   }
 
   @MessagePattern({ cmd: UserPatterns.FindOne })
-  findOne(@Payload() id: number) {
+  findOne(@Payload() { id }: { id: number }) {
     return this.usersService.findOne(id);
   }
 
   @MessagePattern({ cmd: UserPatterns.FindByEmail })
-  findByEmail(@Payload() email: string) {
+  findByEmail(@Payload() { email }: { email: string }) {
     return this.usersService.findByEmail(email);
   }
 

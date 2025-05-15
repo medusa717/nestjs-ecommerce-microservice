@@ -74,9 +74,7 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<UserResponseDto | null> {
     const user = await this.userRepository.findOne({ where: { email } });
-    return plainToInstance(UserResponseDto, user, {
-      excludeExtraneousValues: true,
-    });
+    return user;
   }
 
   async update(
