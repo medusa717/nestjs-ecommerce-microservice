@@ -8,13 +8,18 @@ import {
   Query,
   ParseIntPipe,
   NotFoundException,
-  Put,
+  UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginatedResponse } from 'src/common/types/PaginatedResponse';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalizeName';
+import { UserRole } from 'src/common/types/UserTypes';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -40,6 +45,8 @@ export class ProductsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SELLER)
   createProduct(
     @Body('name', CapitalizeNamePipe) name: string,
     @Body() newProduct: CreateProductDto,
@@ -48,7 +55,9 @@ export class ProductsController {
     return this.productsService.createProduct(newProduct);
   }
 
-  @Put(':id')
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SELLER)
   updateProduct(
     @Param('id', ParseIntPipe) id: number,
     @Body('name', CapitalizeNamePipe) name: string,
@@ -63,6 +72,8 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SELLER)
   deleteUser(@Param('id', ParseIntPipe) id: number) {
     const user = this.productsService.getProduct(id);
     if (!user) throw new NotFoundException(`Product with id ${id} not found`);
