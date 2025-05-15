@@ -18,6 +18,16 @@ services:
             timeout: 5s
             retries: 5
 
+    mongo:
+        image: mongo
+        container_name: mongo-db
+        ports:
+            - '27017:27017'
+        networks:
+            - ecommerce-network
+        volumes:
+            - mongo-data:/data/db
+
     api-gateway:
         container_name: api-gateway
         build:
@@ -95,9 +105,24 @@ services:
             postgres:
                 condition: service_healthy
 
+    cart-microservice:
+        container_name: cart-microservice
+        build:
+            context: ./cart-microservice
+            dockerfile: Dockerfile
+        volumes:
+            - ./cart-microservice:/app
+            - /app/node_modules
+        networks:
+            - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+
 networks:
     ecommerce-network:
         driver: bridge
 
 volumes:
     postgres_data:
+    mongo-data:
