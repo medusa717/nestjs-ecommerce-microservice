@@ -16,7 +16,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.TCP,
         options: {
           host: 'auth-microservice',
-          port: 3010,
+          port: 3020,
         },
       },
       {
@@ -24,7 +24,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.TCP,
         options: {
           host: 'users-microservice',
-          port: 3020,
+          port: 3010,
         },
       },
     ]),
