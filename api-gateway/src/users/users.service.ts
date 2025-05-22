@@ -1,7 +1,6 @@
 import { ClientProxy } from '@nestjs/microservices';
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from '@my/common';
 import { UserPatterns } from 'src/common/patterns/users.patterns';
 
 @Injectable()

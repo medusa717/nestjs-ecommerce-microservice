@@ -18,8 +18,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@ecommerce/common": ["../common/src"],
-      "@ecommerce/common/*": ["../common/src/*"]
-    }
+      "@my/common": ["../common/dist"]
+    },
   }
 }

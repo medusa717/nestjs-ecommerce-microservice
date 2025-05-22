@@ -28,19 +28,33 @@ services:
         volumes:
             - mongo-data:/data/db
 
+    my-common:
+        build:
+            context: ./common
+            dockerfile: Dockerfile
+        volumes:
+            - my-common-dist:/usr/src/app/dist # bu volume sayesinde diğer uygulamlarla paylaşabileceğiz
+            - my-common-modules:/usr/src/app/node_modules
+
     api-gateway:
         container_name: api-gateway
         build:
-            context: ./api-gateway
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./api-gateway/dockerfile
         ports:
             - '3000:3000'
         volumes:
-            - ./api-gateway:/app
-            - /app/node_modules
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./api-gateway:/usr/src/app/api-gateway
+            - /usr/src/app/api-gateway/node_modules
+
+            # ortak kütüphane buradan paylaşıma alınır
+            - my-common-dist:/usr/src/app/common/dist
+            - my-common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            - my-common
             - users-microservice
             - auth-microservice
             - products-microservice
@@ -126,3 +140,5 @@ networks:
 volumes:
     postgres_data:
     mongo-data:
+    my-common-dist:
+    my-common-modules:
