@@ -1,11 +1,11 @@
+import { Observable } from 'rxjs';
+import { UserRole } from '@my/common';
 import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { UserRole } from 'src/common/types/UserTypes';
 
 const userData = {
   id: 1,

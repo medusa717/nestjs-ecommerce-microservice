@@ -1,9 +1,11 @@
-import { Column, Entity, OneToMany } from 'typeorm';
 import { ProductImage } from './product_image.entity';
-import { BaseEntity } from 'src/common/entities/BaseEntity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('products')
-export class Product extends BaseEntity {
+export class Product {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   name: string;
 
@@ -25,4 +27,10 @@ export class Product extends BaseEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

@@ -1,5 +1,5 @@
 import { CartService } from './cart.service';
-import { AddToCartDto, UpdateCartDto } from './dto/cart.dto';
+import { AddToCartDto, UpdateCartDto } from '@my/common';
 import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
 import {
   Body,

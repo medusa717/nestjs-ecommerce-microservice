@@ -6,8 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { RpcException } from '@nestjs/microservices';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { CreateUserDto, UserResponseDto } from '@my/common';
 
 @Injectable()
 export class UsersService {
@@ -37,9 +36,13 @@ export class UsersService {
     createUserDto.password = hashedPassword; // Set the hashed password in the DTO
     const newUser = this.userRepository.create(createUserDto); // Create a new user instance
     const savedUser = await this.userRepository.save(newUser); // Save the new user to the database
-
-    return plainToInstance(UserResponseDto, savedUser, {
-      excludeExtraneousValues: true,
+    
+    return new UserResponseDto({
+      id: savedUser.id,
+      name: savedUser.name,
+      email: savedUser.email,
+      role: savedUser.role,
+      birthdate: savedUser.birthdate,
     });
   }
 
@@ -53,9 +56,13 @@ export class UsersService {
       .take(limit)
       .getMany();
 
-    return plainToInstance(UserResponseDto, users, {
-      excludeExtraneousValues: true,
-    });
+    return users.map((user: User) => new UserResponseDto({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      birthdate: user.birthdate,
+    }));
   }
 
   async findOne(id: number): Promise<UserResponseDto | undefined> {
@@ -67,8 +74,12 @@ export class UsersService {
         code: 404,
       }); // Check if user exists
 
-    return plainToInstance(UserResponseDto, user, {
-      excludeExtraneousValues: true,
+    return new UserResponseDto({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      birthdate: user.birthdate,
     });
   }
 
@@ -97,8 +108,12 @@ export class UsersService {
     };
 
     const updateUser = await this.userRepository.save(updatedUser); // Save the updated user to the database
-    return plainToInstance(UserResponseDto, updateUser, {
-      excludeExtraneousValues: true,
+    return new UserResponseDto({
+      id: updateUser.id,
+      name: updateUser.name,
+      email: updateUser.email,
+      role: updateUser.role,
+      birthdate: updateUser.birthdate,
     });
   }
 
@@ -112,8 +127,12 @@ export class UsersService {
       });
 
     await this.userRepository.delete(id); // Delete the user from the database
-    return plainToInstance(UserResponseDto, existingUser, {
-      excludeExtraneousValues: true,
+    return new UserResponseDto({
+      id: existingUser.id,
+      name: existingUser.name,
+      email: existingUser.email,
+      role: existingUser.role,
+      birthdate: existingUser.birthdate,
     });
   }
 }

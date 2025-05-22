@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { UserType } from 'src/common/types/UserTypes';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrderPatterns } from 'src/common/patterns/orders.patterns';
+import { UserType, CreateOrderDto, UpdateOrderDto, OrderPatterns } from '@my/common';
 
 @Injectable()
 export class OrdersService {

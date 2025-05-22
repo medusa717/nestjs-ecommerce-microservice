@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { UserRole } from 'src/common/types/UserTypes';
+import { UserRole } from '@my/common';
 
 const userData = {
   id: 1,

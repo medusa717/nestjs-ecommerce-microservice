@@ -1,15 +1,7 @@
 import { AppService } from './app.service';
 import { Controller } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductDto, ProductPatterns } from '@my/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-
-export const ProductPatterns = {
-  Create: 'Products.create',
-  FindAll: 'Products.findAll',
-  FindOne: 'Products.findOne',
-  Update: 'Products.update',
-  Delete: 'Products.delete',
-};
 
 @Controller()
 export class AppController {

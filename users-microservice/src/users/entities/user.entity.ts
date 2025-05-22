@@ -1,3 +1,4 @@
+import { UserRole } from '@my/common';
 import {
   Column,
   Entity,
@@ -5,7 +6,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from 'src/common/types/UserTypes';
 
 @Entity('users')
 export class User {

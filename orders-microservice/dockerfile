@@ -1,11 +1,11 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/app/orders-microservice
 
-COPY package*.json ./
+COPY ./orders-microservice/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./orders-microservice ./
 
 CMD ["npm", "run", "start:dev"]

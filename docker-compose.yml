@@ -64,11 +64,16 @@ services:
         container_name: auth-microservice
         restart: always
         build:
-            context: ./auth-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./auth-microservice/dockerfile
         volumes:
-            - ./auth-microservice:/app
-            - /app/node_modules
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./auth-microservice:/usr/src/app/auth-microservice
+            - /usr/src/app/auth-microservice/node_modules
+
+            # ortak kütüphane buradan paylaşıma alınır
+            - my-common-dist:/usr/src/app/common/dist
+            - my-common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -80,11 +85,16 @@ services:
     users-microservice:
         container_name: users-microservice
         build:
-            context: ./users-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./users-microservice/dockerfile
         volumes:
-            - ./users-microservice:/app
-            - /app/node_modules
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./users-microservice:/usr/src/app/users-microservice
+            - /usr/src/app/users-microservice/node_modules
+
+            # ortak kütüphane buradan paylaşıma alınır
+            - my-common-dist:/usr/src/app/common/dist
+            - my-common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -94,11 +104,16 @@ services:
     products-microservice:
         container_name: products-microservice
         build:
-            context: ./products-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./products-microservice/dockerfile
         volumes:
-            - ./products-microservice:/app
-            - /app/node_modules
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./products-microservice:/usr/src/app/products-microservice
+            - /usr/src/app/products-microservice/node_modules
+
+            # ortak kütüphane buradan paylaşıma alınır
+            - my-common-dist:/usr/src/app/common/dist
+            - my-common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -108,11 +123,16 @@ services:
     orders-microservice:
         container_name: orders-microservice
         build:
-            context: ./orders-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./orders-microservice/dockerfile
         volumes:
-            - ./orders-microservice:/app
-            - /app/node_modules
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./orders-microservice:/usr/src/app/orders-microservice
+            - /usr/src/app/orders-microservice/node_modules
+
+            # ortak kütüphane buradan paylaşıma alınır
+            - my-common-dist:/usr/src/app/common/dist
+            - my-common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -122,11 +142,16 @@ services:
     cart-microservice:
         container_name: cart-microservice
         build:
-            context: ./cart-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./cart-microservice/dockerfile
         volumes:
-            - ./cart-microservice:/app
-            - /app/node_modules
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./cart-microservice:/usr/src/app/cart-microservice
+            - /usr/src/app/cart-microservice/node_modules
+
+            # ortak kütüphane buradan paylaşıma alınır
+            - my-common-dist:/usr/src/app/common/dist
+            - my-common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -141,4 +166,6 @@ volumes:
     postgres_data:
     mongo-data:
     my-common-dist:
+        name: my-common-dist
     my-common-modules:
+        name: my-common-modules

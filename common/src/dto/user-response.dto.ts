@@ -1,19 +1,25 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { UserRole } from '../enums/user-role.enum';
 
 export class UserResponseDto {
     @Expose()
-    id: number;
+    id!: number;
 
     @Expose()
-    name: string;
+    name!: string;
 
     @Expose()
-    email: string;
+    email!: string;
 
     @Expose()
-    role: UserRole;
+    @Type(() => Number)
+    role!: UserRole;
 
     @Expose()
-    birthdate: Date;
+    @Type(() => Date)
+    birthdate!: Date;
+
+    constructor(partial: Partial<UserResponseDto>) {
+        Object.assign(this, partial);
+    }
 }

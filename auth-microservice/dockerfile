@@ -1,11 +1,11 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/app/auth-microservice
 
-COPY package*.json ./
+COPY ./auth-microservice/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./auth-microservice ./
 
 CMD ["npm", "run", "start:dev"]

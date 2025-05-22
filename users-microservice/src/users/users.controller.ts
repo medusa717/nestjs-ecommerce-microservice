@@ -1,10 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { ParseDatePipe } from 'src/common/pipes/convertDate';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { UserPatterns } from 'src/common/patterns/userPatterns';
-import { CapitalizeNamePipe } from 'src/common/pipes/capitalizeName';
+import { CreateUserDto, UserPatterns, CapitalizeNamePipe, ParseDatePipe } from '@my/common';
 
 @Controller()
 export class UsersController {

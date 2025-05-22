@@ -1,6 +1,6 @@
 import { Request } from 'express';
+import { UserRole } from '@my/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from 'src/common/types/UserTypes';
 import { ROLES_KEY } from '../decorator/roles.decorator';
 import {
   CanActivate,

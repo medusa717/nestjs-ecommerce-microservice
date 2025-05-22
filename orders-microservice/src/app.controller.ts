@@ -1,11 +1,7 @@
 import { AppService } from './app.service';
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { Payload, RpcException } from '@nestjs/microservices';
-import { MessagePattern } from '@nestjs/microservices';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { OrderPatterns } from './common/patterns/orders.patterns';
-import { UserRole } from './common/types/UserTypes';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import { CreateOrderDto, UpdateOrderDto, OrderPatterns, UserRole } from '@my/common';
 
 @Controller()
 export class AppController {
@@ -20,7 +16,6 @@ export class AppController {
   async findOne(
     @Payload() payload: { id: number; user: { id: number; role: UserRole } },
   ) {
-    console.log('payload in findOne', payload);
     const order = await this.appService.findOne(payload.id);
     if (!order)
       throw new RpcException({

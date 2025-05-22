@@ -1,5 +1,10 @@
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from '@my/common';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
+import { CreateUserDto, UpdateUserDto, UserRole } from '@my/common';
+import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
+import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 import {
   Controller,
   Get,
@@ -12,12 +17,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { UserRole } from 'src/common/types/UserTypes';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
-import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 
 @Controller('users')
 export class UsersController {

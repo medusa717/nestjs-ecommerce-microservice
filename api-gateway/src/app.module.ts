@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { AppController } from './app.controller';
-import { UsersModule } from './users/users.module';
-import { ResponseInterceptor } from './common/interceptors/transform-response.interceptor';
-import { ProductsModule } from './products/products.module';
 import { AuthModule } from './auth/auth.module';
-import { OrdersModule } from './orders/orders.module';
 import { CartModule } from './cart/cart.module';
+import { UsersModule } from './users/users.module';
+import { OrdersModule } from './orders/orders.module';
+import { ProductsModule } from './products/products.module';
+import { ResponseInterceptor } from './common/interceptors/transform-response.interceptor';
 
 @Module({
   imports: [UsersModule, ProductsModule, AuthModule, OrdersModule, CartModule],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,

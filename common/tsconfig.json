@@ -16,7 +16,9 @@
         "types": ["node"],
         "moduleResolution": "node",
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "declarationMap": true,
+        "sourceMap": true
     },
     "include": ["src"]
 }

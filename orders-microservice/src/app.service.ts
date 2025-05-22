@@ -3,10 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RpcException } from '@nestjs/microservices';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderItem } from './entities/orderItems.entity';
-import { OrderItemDto } from './dto/orderitem-dto';
+import { CreateOrderDto, UpdateOrderDto, OrderItemDto } from '@my/common';
 
 @Injectable()
 export class AppService {

@@ -25,6 +25,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
   await app.listen();
   console.log(`Users microservice is running on port ${3010}`);
 }

@@ -1,9 +1,11 @@
 import { Product } from './product.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { BaseEntity } from 'src/common/entities/BaseEntity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('product_images')
-export class ProductImage extends BaseEntity {
+export class ProductImage {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   url: string;
 
@@ -14,4 +16,10 @@ export class ProductImage extends BaseEntity {
     onDelete: 'CASCADE',
   })
   product: Product;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

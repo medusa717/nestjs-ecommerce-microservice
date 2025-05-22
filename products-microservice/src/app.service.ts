@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { RpcException } from '@nestjs/microservices';
-import { CreateProductDto } from './dto/create-product.dto';
-import { PaginatedResponse } from './common/types/PaginatedResponse';
+import { PaginatedResponse, CreateProductDto } from '@my/common';
 
 @Injectable()
 export class AppService {

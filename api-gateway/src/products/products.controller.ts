@@ -1,3 +1,10 @@
+import { ProductsService } from './products.service';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
+import { CapitalizeNamePipe } from 'src/common/pipes/capitalizeName';
+import { PaginatedResponse } from 'src/common/types/PaginatedResponse';
+import { CreateProductDto, UpdateProductDto, UserRole } from '@my/common';
 import {
   Controller,
   Get,
@@ -11,15 +18,6 @@ import {
   UseGuards,
   Patch,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { PaginatedResponse } from 'src/common/types/PaginatedResponse';
-import { CapitalizeNamePipe } from 'src/common/pipes/capitalizeName';
-import { UserRole } from 'src/common/types/UserTypes';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jtw-auth.guard';
 
 @Controller('products')
 export class ProductsController {

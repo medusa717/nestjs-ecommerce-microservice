@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AddToCartDto, UpdateCartDto } from './dto/cart.dto';
-import { CartPatterns } from 'src/common/patterns/cart.patterns';
+import { AddToCartDto, UpdateCartDto, CartPatterns } from '@my/common';
 
 @Injectable()
 export class CartService {

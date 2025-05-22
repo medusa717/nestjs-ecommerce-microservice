@@ -1,9 +1,8 @@
 import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { CreateProductDto } from './dto/create-product.dto';
+import { ProductPatterns, CreateProductDto } from '@my/common';
 import { PaginatedResponse } from 'src/common/types/PaginatedResponse';
-import { ProductPatterns } from 'src/common/patterns/products.patterns';
 
 @Injectable()
 export class ProductsService {
