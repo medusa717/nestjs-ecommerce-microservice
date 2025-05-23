@@ -1,32 +1,19 @@
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
+import { SERVICES_CONFIG } from '@my/common';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt/jwtStrategy';
 import { AuthController } from './auth.controller';
+import { ClientsModule } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ConfigModule,
     ConfigModule.forRoot(),
     ClientsModule.register([
-      {
-        name: 'AUTH_MICROSERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'auth-microservice',
-          port: 3020,
-        },
-      },
-      {
-        name: 'USERS_MICROSERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'users-microservice',
-          port: 3010,
-        },
-      },
+      SERVICES_CONFIG('AUTH'),
+      SERVICES_CONFIG('USERS'),
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

@@ -1,3 +1,5 @@
+export * from './services/microservices';
+
 export * from './interceptors/rpc-exception.filter';
 
 export * from './pipes/convertDate';

@@ -1,3 +1,4 @@
+import { SERVICES } from '@my/common';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
@@ -12,7 +13,7 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: '0.0.0.0',
-        port: 3030,
+        port: SERVICES.PRODUCTS.port,
       },
     },
   );
@@ -26,6 +27,6 @@ async function bootstrap() {
     }),
   );
   await app.listen();
-  console.log(`Products microservice is running on port ${3030}`);
+  console.log(`Products microservice is running on port ${SERVICES.PRODUCTS.port}`);
 }
 bootstrap();
