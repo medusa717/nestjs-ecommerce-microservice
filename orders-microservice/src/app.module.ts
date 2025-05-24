@@ -3,8 +3,11 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { AppController } from './app.controller';
+import { SERVICES_CONFIG, SERVICES } from '@my/common';
 import { OrderItem } from './entities/orderItems.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { OrdersKafkaProducerService } from './orders-kafka-producer.service';
 
 @Module({
   imports: [
@@ -29,8 +32,20 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         cache: { duration: 1000 },
       }),
     }),
+    ClientsModule.register([
+      {
+        ...SERVICES_CONFIG('KAFKA'),
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'orders',
+            brokers: [`${SERVICES.KAFKA.host}:${SERVICES.KAFKA.port}`],
+          },
+        },
+      },
+    ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, OrdersKafkaProducerService],
 })
 export class AppModule {}

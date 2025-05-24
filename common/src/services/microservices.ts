@@ -12,8 +12,8 @@ export const SERVICES = {
         port: 3020,
     },
     PRODUCTS: {
-        name: 'PRODUCT_MICROSERVICE',
-        host: 'product-microservice',
+        name: 'PRODUCTS_MICROSERVICE',
+        host: 'products-microservice',
         port: 3030,
     },
     ORDERS: {
@@ -26,11 +26,31 @@ export const SERVICES = {
         host: 'cart-microservice',
         port: 3050,
     },
+    NOTIFICATIONS: {
+        name: 'NOTIFICATIONS_MICROSERVICE',
+        host: 'notifications-microservice',
+        port: 3060,
+    },
+    SHIPPING: {
+        name: 'SHIPPING_MICROSERVICE',
+        host: 'shipping-microservice',
+        port: 3070,
+    },
+    STOCK: {
+        name: 'STOCK_MICROSERVICE',
+        host: 'stock-microservice',
+        port: 3080,
+    },
+    KAFKA: {
+        name: 'KAFKA_MICROSERVICE',
+        host: 'kafka',
+        port: 9092,
+    },
 };
 
 export const SERVICES_CONFIG = (service: keyof typeof SERVICES) => ({
     name: SERVICES[service].name,
-    transport: Transport.TCP,
+    transport: Transport.TCP as const,
     options: {
         host: SERVICES[service].host,
         port: SERVICES[service].port,

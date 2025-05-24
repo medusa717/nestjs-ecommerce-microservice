@@ -28,13 +28,31 @@ services:
         volumes:
             - mongo-data:/data/db
 
-    my-common:
-        build:
-            context: ./common
-            dockerfile: Dockerfile
-        volumes:
-            - my-common-dist:/usr/src/app/dist # bu volume sayesinde diğer uygulamlarla paylaşabileceğiz
-            - my-common-modules:/usr/src/app/node_modules
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
+        container_name: zookeeper
+        ports:
+            - '2181:2181'
+        networks:
+            - ecommerce-network
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+
+    kafka:
+        image: confluentinc/cp-kafka:latest
+        container_name: kafka
+        ports:
+            - '9092:9092'
+        networks:
+            - ecommerce-network
+        depends_on:
+            - zookeeper
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+            KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
     api-gateway:
         container_name: api-gateway
@@ -48,13 +66,12 @@ services:
             - ./api-gateway:/usr/src/app/api-gateway
             - /usr/src/app/api-gateway/node_modules
 
-            # ortak kütüphane buradan paylaşıma alınır
-            - my-common-dist:/usr/src/app/common/dist
-            - my-common-modules:/usr/src/app/common/node_modules
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
-            - my-common
             - users-microservice
             - auth-microservice
             - products-microservice
@@ -71,9 +88,9 @@ services:
             - ./auth-microservice:/usr/src/app/auth-microservice
             - /usr/src/app/auth-microservice/node_modules
 
-            # ortak kütüphane buradan paylaşıma alınır
-            - my-common-dist:/usr/src/app/common/dist
-            - my-common-modules:/usr/src/app/common/node_modules
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -92,9 +109,9 @@ services:
             - ./users-microservice:/usr/src/app/users-microservice
             - /usr/src/app/users-microservice/node_modules
 
-            # ortak kütüphane buradan paylaşıma alınır
-            - my-common-dist:/usr/src/app/common/dist
-            - my-common-modules:/usr/src/app/common/node_modules
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -111,9 +128,9 @@ services:
             - ./products-microservice:/usr/src/app/products-microservice
             - /usr/src/app/products-microservice/node_modules
 
-            # ortak kütüphane buradan paylaşıma alınır
-            - my-common-dist:/usr/src/app/common/dist
-            - my-common-modules:/usr/src/app/common/node_modules
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -130,9 +147,9 @@ services:
             - ./orders-microservice:/usr/src/app/orders-microservice
             - /usr/src/app/orders-microservice/node_modules
 
-            # ortak kütüphane buradan paylaşıma alınır
-            - my-common-dist:/usr/src/app/common/dist
-            - my-common-modules:/usr/src/app/common/node_modules
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -149,9 +166,66 @@ services:
             - ./cart-microservice:/usr/src/app/cart-microservice
             - /usr/src/app/cart-microservice/node_modules
 
-            # ortak kütüphane buradan paylaşıma alınır
-            - my-common-dist:/usr/src/app/common/dist
-            - my-common-modules:/usr/src/app/common/node_modules
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
+        networks:
+            - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+    notifications-microservice:
+        container_name: notifications-microservice
+        build:
+            context: .
+            dockerfile: ./notifications-microservice/dockerfile
+        volumes:
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./notifications-microservice:/usr/src/app/notifications-microservice
+            - /usr/src/app/notifications-microservice/node_modules
+
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
+        networks:
+            - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+    shipping-microservice:
+        container_name: shipping-microservice
+        build:
+            context: .
+            dockerfile: ./shipping-microservice/dockerfile
+        volumes:
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./shipping-microservice:/usr/src/app/shipping-microservice
+            - /usr/src/app/shipping-microservice/node_modules
+
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
+        networks:
+            - ecommerce-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+    stock-microservice:
+        container_name: stock-microservice
+        build:
+            context: .
+            dockerfile: ./stock-microservice/dockerfile
+        volumes:
+            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
+            - ./stock-microservice:/usr/src/app/stock-microservice
+            - /usr/src/app/stock-microservice/node_modules
+
+            # Ortak kütüphane bind mount ile paylaşılır:
+            - ./common/dist:/usr/src/app/common/dist
+            - ./common/node_modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
@@ -165,7 +239,3 @@ networks:
 volumes:
     postgres_data:
     mongo-data:
-    my-common-dist:
-        name: my-common-dist
-    my-common-modules:
-        name: my-common-modules

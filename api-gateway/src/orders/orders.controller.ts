@@ -23,7 +23,7 @@ export class OrdersController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.USER, UserRole.SELLER)
+  @Roles(UserRole.USER, UserRole.SELLER, UserRole.ADMIN, UserRole.SUPER_ADMIN)
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto);
   }

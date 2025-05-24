@@ -1,4 +1,5 @@
 export * from './services/microservices';
+export * from './events/order-created.event';
 
 export * from './interceptors/rpc-exception.filter';
 
@@ -6,6 +7,7 @@ export * from './pipes/convertDate';
 export * from './pipes/capitalizeName';
 
 export * from './types/user-type';
+export * from './types/kafka-type';
 export * from './types/product-type';
 export * from './types/paginated-response';
 

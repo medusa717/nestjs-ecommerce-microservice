@@ -1,10 +1,17 @@
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RpcException } from '@nestjs/microservices';
+import { Inject, Injectable } from '@nestjs/common';
 import { OrderItem } from './entities/orderItems.entity';
-import { CreateOrderDto, UpdateOrderDto, OrderItemDto } from '@my/common';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
+import {
+  CreateOrderDto,
+  UpdateOrderDto,
+  OrderItemDto,
+  SERVICES,
+  ORDER_KAFKA_EVENTS,
+  OrderCreatedEvent,
+} from '@my/common';
 
 @Injectable()
 export class AppService {
@@ -14,6 +21,8 @@ export class AppService {
 
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
+
+    @Inject(SERVICES.KAFKA.name) private readonly kafkaClient: ClientKafka,
   ) {}
 
   findAll(): Promise<Order[]> {
@@ -23,7 +32,6 @@ export class AppService {
   }
 
   async findOne(id: number): Promise<Order> {
-    console.log('id in findOne', id);
     const order = await this.orderRepository.findOne({
       where: { id },
       relations: ['orderItems'],
@@ -54,7 +62,23 @@ export class AppService {
       orderItems,
     });
 
-    return this.orderRepository.save(newOrder);
+    const savedOrder = await this.orderRepository.save(newOrder);
+    const orderCreatedEvent: OrderCreatedEvent = {
+      orderId: savedOrder.id,
+      userId: savedOrder.userId,
+      totalPrice: savedOrder.totalPrice,
+      items: savedOrder.orderItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    };
+
+    this.kafkaClient.emit(ORDER_KAFKA_EVENTS.ORDER_CREATED, {
+      value: orderCreatedEvent,
+    });
+
+    return savedOrder;
   }
 
   async update(id: number, order: UpdateOrderDto) {

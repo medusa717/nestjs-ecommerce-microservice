@@ -3,16 +3,22 @@ api-gateway/node_modules
 auth-microservice/node_modules
 cart-microservice/node_modules
 users-microservice/node_modules
+stock-microservice/node_modules
 orders-microservice/node_modules
 products-microservice/node_modules
+shipping-microservice/node_modules
+notifications-microservice/node_modules
 
 common/dist
 api-gateway/dist
 cart-microservice/dist
 auth-microservice/dist
 users-microservice/dist
+stock-microservice/dist
 orders-microservice/dist
 products-microservice/dist
+shipping-microservice/dist
+notifications-microservice/dist
 
 # compiled output
 /dist
