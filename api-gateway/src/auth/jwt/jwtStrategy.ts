@@ -1,4 +1,5 @@
 import { lastValueFrom } from 'rxjs';
+import { UserPatterns } from '@my/common';
 import { ConfigService } from '@nestjs/config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
@@ -23,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload) {
     const user = await lastValueFrom(
       this.usersMicroservice.send(
-        { cmd: 'Users.findOne' },
+        { cmd: UserPatterns.FindOne },
         { id: Number(payload.sub) },
       ),
     );

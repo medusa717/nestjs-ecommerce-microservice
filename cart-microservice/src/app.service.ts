@@ -1,9 +1,10 @@
 import { Model } from 'mongoose';
 import { lastValueFrom } from 'rxjs';
-import { AddToCartDto, UpdateCartDto } from './dto/cart.dto';
+import { ProductPatterns } from '@my/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Inject, Injectable } from '@nestjs/common';
 import { Cart, CartDocument } from './schema/cart.schema';
+import { AddToCartDto, UpdateCartDto } from './dto/cart.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class AppService {
   async create(dto: AddToCartDto) {
     const product = await lastValueFrom(
       this.productsMicroservice.send(
-        { cmd: 'Products.findOne' },
+        { cmd: ProductPatterns.FindOne },
         { id: dto.productId },
       ),
     );

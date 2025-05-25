@@ -1,11 +1,12 @@
 import * as bcrypt from 'bcrypt';
 import { lastValueFrom } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { UserPatterns } from '@my/common';
 import { LoginDto } from './dto/login.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { JwtPayload } from 'src/common/types/JwtType';
 import { UserType } from './common/types/UserTypes';
+import { JwtPayload } from 'src/common/types/JwtType';
 
 @Injectable()
 export class AppService {
@@ -17,7 +18,7 @@ export class AppService {
 
   async findByEmail(email: string, password: string) {
     const user = await lastValueFrom(
-      this.usersMicroservice.send({ cmd: 'Users.findByEmail' }, { email }),
+      this.usersMicroservice.send({ cmd: UserPatterns.FindByEmail }, { email }),
     );
     if (!user) return null;
 
