@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
+import { EventPattern } from '@nestjs/microservices';
+import { ORDER_KAFKA_EVENTS, OrderCreatedEvent } from '@my/common';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @EventPattern(ORDER_KAFKA_EVENTS.ORDER_CREATED)
+  handleOrderCreatedEvent(orderCreatedEvent: OrderCreatedEvent) {
+    return this.appService.orderCreatedEventHandler(orderCreatedEvent);
   }
 }

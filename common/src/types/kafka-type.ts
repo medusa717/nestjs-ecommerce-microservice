@@ -5,3 +5,7 @@ export const ORDER_KAFKA_EVENTS = {
 export const SHIPPING_KAFKA_EVENTS = {
     SHIPPING_CREATED: 'Shipping.Created',
 };
+
+export const STOCK_KAFKA_EVENTS = {
+    STOCK_WARNING: 'Stock.Warning',
+};

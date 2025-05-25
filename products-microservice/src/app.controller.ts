@@ -31,4 +31,9 @@ export class AppController {
   delete(@Payload() { id }) {
     return this.productsService.delete(id);
   }
+
+  @MessagePattern({ cmd: ProductPatterns.DecreaseStock })
+  decreaseStock(@Payload() { id, quantity }) {
+    return this.productsService.decreaseStock(id, quantity);
+  }
 }

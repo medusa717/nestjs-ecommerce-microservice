@@ -82,4 +82,16 @@ export class AppService {
     this.productRepository.delete(id); // Delete the user from the database
     return existingProdcut; // Return the deleted user
   }
+
+  async decreaseStock(id: number, quantity: number) {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product)
+      throw new RpcException({
+        code: 404,
+        message: `Product with id ${id} not found`,
+      });
+
+    product.stock -= quantity;
+    return await this.productRepository.save(product);
+  }
 }
