@@ -1,5 +1,6 @@
 export * from './services/microservices';
 export * from './events/order-created.event';
+export * from './events/shipping-created.event';
 
 export * from './interceptors/rpc-exception.filter';
 
@@ -18,6 +19,7 @@ export * from './patterns/auth-patterns';
 export * from './patterns/cart-patterns';
 export * from './patterns/order-patterns';
 export * from './patterns/product-patterns';
+export * from './patterns/shipping-patterns';
 
 export * from './dto/create-user.dto';
 export * from './dto/update-user.dto';

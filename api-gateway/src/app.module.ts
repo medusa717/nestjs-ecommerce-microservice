@@ -6,9 +6,10 @@ import { UsersModule } from './users/users.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
 import { ResponseInterceptor } from './common/interceptors/transform-response.interceptor';
+import { ShippingModule } from './shipping/shipping.module';
 
 @Module({
-  imports: [UsersModule, ProductsModule, AuthModule, OrdersModule, CartModule],
+  imports: [UsersModule, ProductsModule, AuthModule, OrdersModule, CartModule, ShippingModule],
   providers: [
     {
       provide: APP_INTERCEPTOR,

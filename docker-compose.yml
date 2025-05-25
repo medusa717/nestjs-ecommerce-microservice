@@ -238,4 +238,6 @@ networks:
 
 volumes:
     postgres_data:
+        name: postgres_data
     mongo-data:
+        name: mongo-data
