@@ -10,7 +10,7 @@ import { UserRole } from '@my/common';
 const userData = {
   id: 1,
   name: 'John Doe',
-  role: 3,
+  role: UserRole.SUPER_ADMIN,
 };
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { UserRole } from './UserTypes';
+import { UserRole } from '@my/common';
 
 export interface JwtPayload {
   sub: number; // User ID

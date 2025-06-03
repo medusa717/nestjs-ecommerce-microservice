@@ -75,6 +75,8 @@ services:
         build:
             context: ./common
             dockerfile: dockerfile
+            args:
+                - BUILD_DATE=${BUILD_DATE:-$(date +%Y%m%d_%H%M%S)}
         volumes:
             - common-dist:/usr/src/app/common/dist
             - common-modules:/usr/src/app/common/node_modules

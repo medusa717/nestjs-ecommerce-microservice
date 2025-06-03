@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import { AppService } from './app.service';
+import { SERVICES_CONFIG } from '@my/common';
 import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Cart, CartSchema } from './schema/cart.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -13,14 +14,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       isGlobal: true,
     }),
     ClientsModule.register([
-      {
-        name: 'PRODUCT_MICROSERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'products-microservice',
-          port: 3030,
-        },
-      },
+      { ...SERVICES_CONFIG('PRODUCTS'), transport: Transport.TCP },
     ]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

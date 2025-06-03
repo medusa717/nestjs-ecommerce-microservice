@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AppService } from './app.service';
+import { SERVICES_CONFIG } from '@my/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Transport, ClientsModule } from '@nestjs/microservices';
@@ -9,14 +10,7 @@ import { Transport, ClientsModule } from '@nestjs/microservices';
   imports: [
     ConfigModule.forRoot(),
     ClientsModule.register([
-      {
-        name: 'USERS_MICROSERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'users-microservice',
-          port: 3010,
-        },
-      },
+      { ...SERVICES_CONFIG('USERS'), transport: Transport.TCP },
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

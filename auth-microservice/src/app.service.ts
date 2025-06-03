@@ -1,12 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { lastValueFrom } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
-import { UserPatterns } from '@my/common';
 import { LoginDto } from './dto/login.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { UserType } from './common/types/UserTypes';
 import { JwtPayload } from 'src/common/types/JwtType';
+import { UserPatterns, UserResponseDto, UserType } from '@my/common';
 
 @Injectable()
 export class AppService {
@@ -44,9 +43,27 @@ export class AppService {
     };
   }
 
-  refreshToken(user: Partial<UserType>) {
+  async verifyToken(token: string) {
+    return this.jwtService.verify(token);
+  }
+
+  async refreshToken(user: Partial<UserType>) {
     const payload = { sub: user.id, email: user.email, role: user.role };
+    const userData = await lastValueFrom(
+      this.usersMicroservice.send(
+        { cmd: UserPatterns.FindByEmail },
+        { email: user.email },
+      ),
+    );
+
     return {
+      user: new UserResponseDto({
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        birthdate: userData.birthdate,
+      }),
       accessToken: this.jwtService.sign(payload), // Geneerate new JWT token
     };
   }

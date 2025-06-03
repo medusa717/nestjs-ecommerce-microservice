@@ -1,5 +1,11 @@
 FROM node:20-alpine
+
 WORKDIR /usr/src/app/common
+
 COPY . .
+
 RUN npm install
+
 RUN npm run build
+
+CMD ["tail", "-f", "/dev/null"]

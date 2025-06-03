@@ -1,3 +1,5 @@
+import { UserRole } from 'enums/user-role.enum';
+
 export interface UserType {
     id: number;
     name: string;
@@ -5,5 +7,5 @@ export interface UserType {
     password: string;
     isActive: boolean;
     birthdate: Date;
-    role: number;
+    role: UserRole;
 }
