@@ -7,18 +7,14 @@ import {
 import { Observable } from 'rxjs';
 import { UserRole } from '@my/common';
 
-const userData = {
-  id: 1,
-  name: 'John Doe',
-  role: UserRole.SUPER_ADMIN,
-};
-
 @Injectable()
 export class AdminGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const user = userData; // Replace with actual user retrieval logic
+    const request = context.switchToHttp().getRequest();
+    const user = request.user; // User info from JWT token
+
     if (
       !user ||
       (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPER_ADMIN)
