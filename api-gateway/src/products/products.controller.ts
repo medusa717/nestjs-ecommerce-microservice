@@ -44,7 +44,7 @@ export class ProductsController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.SELLER)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   createProduct(
     @Body('name', CapitalizeNamePipe) name: string,
     @Body() newProduct: CreateProductDto,
@@ -55,7 +55,7 @@ export class ProductsController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.SELLER)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   updateProduct(
     @Param('id', ParseIntPipe) id: number,
     @Body('name', CapitalizeNamePipe) name: string,
@@ -71,7 +71,7 @@ export class ProductsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.SELLER)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   deleteUser(@Param('id', ParseIntPipe) id: number) {
     const user = this.productsService.getProduct(id);
     if (!user) throw new NotFoundException(`Product with id ${id} not found`);

@@ -9,6 +9,7 @@ import {
   UnauthorizedException,
   Req,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 
 @Controller('auth')
@@ -26,7 +27,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Post('me')
+  @Get('me')
   @UseGuards(JwtAuthGuard) // Verify JWT token
   refreshToken(@Req() req: Request & { user: UserType }) {
     const user = req.user as Partial<UserType>;
