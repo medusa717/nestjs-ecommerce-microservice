@@ -1,2 +1,32 @@
-/node_modules
-/build
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log
+
+# Build
+dist
+build
+
+# IDE
+.idea
+.vscode
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# Store
+.DS_Store
+
+# Coverage
+coverage

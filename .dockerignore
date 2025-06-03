@@ -19,14 +19,4 @@ docker-compose.yml
 Dockerfile
 .dockerignore
 
-# Environment
-.env
-
-# Logs
-*.log
-
-# Store
-.DS_Store
-
-# Coverage
-coverage
+**/node_modules/**

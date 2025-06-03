@@ -1,6 +1,7 @@
 services:
     postgres:
         image: postgres:latest
+        container_name: postgres-db
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -19,7 +20,7 @@ services:
             retries: 5
 
     mongo:
-        image: mongo
+        image: mongo:latest
         container_name: mongo-db
         ports:
             - '27017:27017'
@@ -27,6 +28,11 @@ services:
             - ecommerce-network
         volumes:
             - mongo-data:/data/db
+        healthcheck:
+            test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+            interval: 10s
+            timeout: 10s
+            retries: 5
 
     zookeeper:
         image: confluentinc/cp-zookeeper:latest
@@ -37,6 +43,11 @@ services:
             - ecommerce-network
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
+        healthcheck:
+            test: ['CMD-SHELL', 'echo ruok | nc localhost 2181 || exit 1']
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     kafka:
         image: confluentinc/cp-kafka:latest
@@ -46,13 +57,27 @@ services:
         networks:
             - ecommerce-network
         depends_on:
-            - zookeeper
+            zookeeper:
+                condition: service_healthy
         environment:
             KAFKA_BROKER_ID: 1
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
             KAFKA_LISTENERS: PLAINTEXT://kafka:9092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        healthcheck:
+            test: ['CMD-SHELL', 'kafka-topics --bootstrap-server localhost:9092 --list']
+            interval: 30s
+            timeout: 10s
+            retries: 5
+
+    common:
+        build:
+            context: ./common
+            dockerfile: dockerfile
+        volumes:
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
 
     api-gateway:
         container_name: api-gateway
@@ -62,42 +87,45 @@ services:
         ports:
             - '3000:3000'
         volumes:
-            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
             - ./api-gateway:/usr/src/app/api-gateway
             - /usr/src/app/api-gateway/node_modules
 
-            # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            - common
             - users-microservice
             - auth-microservice
             - products-microservice
-            - orders-microservice
+        restart: unless-stopped
+        env_file:
+            - ./api-gateway/.env
 
     auth-microservice:
         container_name: auth-microservice
-        restart: always
         build:
             context: .
             dockerfile: ./auth-microservice/dockerfile
         volumes:
-            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
             - ./auth-microservice:/usr/src/app/auth-microservice
             - /usr/src/app/auth-microservice/node_modules
 
-            # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
             users-microservice:
                 condition: service_started
+        restart: unless-stopped
+        env_file:
+            - ./auth-microservice/.env
 
     users-microservice:
         container_name: users-microservice
@@ -105,18 +133,19 @@ services:
             context: .
             dockerfile: ./users-microservice/dockerfile
         volumes:
-            # Bind mount sayesinde kodda değişiklik otomatik yüklenir
             - ./users-microservice:/usr/src/app/users-microservice
             - /usr/src/app/users-microservice/node_modules
 
-            # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
-            postgres:
-                condition: service_healthy
+            - common
+            - postgres
+        restart: unless-stopped
+        env_file:
+            - ./users-microservice/.env
 
     products-microservice:
         container_name: products-microservice
@@ -129,11 +158,13 @@ services:
             - /usr/src/app/products-microservice/node_modules
 
             # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
 
@@ -148,11 +179,13 @@ services:
             - /usr/src/app/orders-microservice/node_modules
 
             # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
 
@@ -167,11 +200,13 @@ services:
             - /usr/src/app/cart-microservice/node_modules
 
             # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
 
@@ -186,11 +221,13 @@ services:
             - /usr/src/app/notifications-microservice/node_modules
 
             # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
 
@@ -205,11 +242,13 @@ services:
             - /usr/src/app/shipping-microservice/node_modules
 
             # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
 
@@ -224,11 +263,13 @@ services:
             - /usr/src/app/stock-microservice/node_modules
 
             # Ortak kütüphane bind mount ile paylaşılır:
-            - ./common/dist:/usr/src/app/common/dist
-            - ./common/node_modules:/usr/src/app/common/node_modules
+            - common-dist:/usr/src/app/common/dist
+            - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
         depends_on:
+            common:
+                condition: service_started
             postgres:
                 condition: service_healthy
 
@@ -241,3 +282,5 @@ volumes:
         name: postgres_data
     mongo-data:
         name: mongo-data
+    common-dist:
+    common-modules:
