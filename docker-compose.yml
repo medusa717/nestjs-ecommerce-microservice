@@ -44,10 +44,10 @@ services:
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
         healthcheck:
-            test: ['CMD-SHELL', 'echo ruok | nc localhost 2181 || exit 1']
+            test: nc -z localhost 2181 || exit -1
             interval: 10s
             timeout: 5s
-            retries: 5
+            retries: 3
 
     kafka:
         image: confluentinc/cp-kafka:latest
@@ -66,10 +66,30 @@ services:
             KAFKA_LISTENERS: PLAINTEXT://kafka:9092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         healthcheck:
-            test: ['CMD-SHELL', 'kafka-topics --bootstrap-server localhost:9092 --list']
+            test: kafka-topics --bootstrap-server broker:9092 --list
             interval: 30s
             timeout: 10s
-            retries: 5
+            retries: 3
+
+    kafdrop:
+        image: obsidiandynamics/kafdrop
+        restart: unless-stopped
+        ports:
+            - '9000:9000'
+        environment:
+            KAFKA_BROKER_CONNECT: 'kafka:9092'
+        depends_on:
+            - kafka
+        networks:
+            - ecommerce-network
+
+    redis:
+        image: redis:6.2-alpine
+        container_name: redis
+        ports:
+            - '6379:6379'
+        networks:
+            - ecommerce-network
 
     common:
         build:
@@ -101,9 +121,15 @@ services:
             - users-microservice
             - auth-microservice
             - products-microservice
+            - orders-microservice
+            - cart-microservice
+            - notifications-microservice
+            - shipping-microservice
+            - stock-microservice
+            - redis
         restart: unless-stopped
         env_file:
-            - ./api-gateway/.env
+            - .env
 
     auth-microservice:
         container_name: auth-microservice
@@ -127,7 +153,7 @@ services:
                 condition: service_started
         restart: unless-stopped
         env_file:
-            - ./auth-microservice/.env
+            - .env
 
     users-microservice:
         container_name: users-microservice
@@ -142,12 +168,13 @@ services:
             - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
+        env_file:
+            - .env
         depends_on:
             - common
             - postgres
+            - kafka
         restart: unless-stopped
-        env_file:
-            - ./users-microservice/.env
 
     products-microservice:
         container_name: products-microservice
@@ -164,11 +191,15 @@ services:
             - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
+        env_file:
+            - .env
         depends_on:
             common:
                 condition: service_started
             postgres:
                 condition: service_healthy
+            kafka:
+                condition: service_started
 
     orders-microservice:
         container_name: orders-microservice
@@ -185,11 +216,15 @@ services:
             - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
+        env_file:
+            - .env
         depends_on:
             common:
                 condition: service_started
             postgres:
                 condition: service_healthy
+            kafka:
+                condition: service_started
 
     cart-microservice:
         container_name: cart-microservice
@@ -206,6 +241,8 @@ services:
             - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
+        env_file:
+            - .env
         depends_on:
             common:
                 condition: service_started
@@ -227,11 +264,15 @@ services:
             - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
+        env_file:
+            - .env
         depends_on:
             common:
                 condition: service_started
             postgres:
                 condition: service_healthy
+            kafka:
+                condition: service_started
 
     shipping-microservice:
         container_name: shipping-microservice
@@ -248,11 +289,15 @@ services:
             - common-modules:/usr/src/app/common/node_modules
         networks:
             - ecommerce-network
+        env_file:
+            - .env
         depends_on:
             common:
                 condition: service_started
             postgres:
                 condition: service_healthy
+            kafka:
+                condition: service_started
 
     stock-microservice:
         container_name: stock-microservice
@@ -274,6 +319,8 @@ services:
                 condition: service_started
             postgres:
                 condition: service_healthy
+            kafka:
+                condition: service_started
 
 networks:
     ecommerce-network:

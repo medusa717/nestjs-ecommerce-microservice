@@ -2,7 +2,18 @@
 
 ## Overview
 
-This project is a modern e-commerce platform built using a microservice architecture with NestJS. The system is designed to be scalable, maintainable, and follows best practices in distributed systems.
+This project is a scalable, modular e-commerce platform built with NestJS microservices. It enables online shopping, user management, order processing, inventory tracking, and real-time notifications, all orchestrated through a modern distributed architecture.
+
+### Key Features
+
+-   Modular microservice architecture for scalability and maintainability
+-   Centralized API Gateway for unified client access
+-   Secure authentication and authorization
+-   Product catalog and inventory management
+-   Shopping cart and order processing
+-   Real-time notifications via Kafka
+-   Containerized deployment with Docker & Docker Compose
+-   RESTful API design with TypeScript
 
 ## Architecture
 
@@ -48,25 +59,25 @@ The system consists of the following microservices:
 
 ### Installation
 
-1. Clone the repository:
+1.  Clone the repository:
 
-```bash
-git clone https://gitlab.com/onurcansevinc/nest-ecommerce-microservice.git
-cd nest-ecommerce-microservice
-```
+    ```bash
+    git clone https://gitlab.com/onurcansevinc/nest-ecommerce-microservice.git
+    cd nest-ecommerce-microservice
+    ```
 
-2. Install dependencies for each microservice:
+2.  Install dependencies for each microservice:
 
-```bash
-# Navigate to each microservice directory and run:
-npm install
-```
+    ```bash
+    # Navigate to each microservice directory and run:
+    npm install
+    ```
 
-3. Start the services using Docker Compose:
+3.  Start the services using Docker Compose:
 
-```bash
-docker-compose up -d
-```
+    ```bash
+    docker-compose up -d
+    ```
 
 ## Development
 
