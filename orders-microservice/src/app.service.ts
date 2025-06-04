@@ -1,9 +1,10 @@
+import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inject, Injectable } from '@nestjs/common';
 import { OrderItem } from './entities/orderItems.entity';
-import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { ClientKafka, ClientProxy, RpcException } from '@nestjs/microservices';
 import {
   CreateOrderDto,
   UpdateOrderDto,
@@ -11,6 +12,7 @@ import {
   SERVICES,
   ORDER_KAFKA_EVENTS,
   OrderCreatedEvent,
+  ProductPatterns,
 } from '@my/common';
 
 @Injectable()
@@ -23,6 +25,9 @@ export class AppService {
     private readonly orderItemRepository: Repository<OrderItem>,
 
     @Inject(SERVICES.KAFKA.name) private readonly kafkaClient: ClientKafka,
+
+    @Inject(SERVICES.PRODUCTS.name)
+    private readonly productsMicroservice: ClientProxy,
   ) {}
 
   findAll(): Promise<Order[]> {
@@ -47,6 +52,21 @@ export class AppService {
   }
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
+    const productIds = createOrderDto.orderItems.map((item) => item.productId);
+    const products = await lastValueFrom(
+      this.productsMicroservice.send(
+        { cmd: ProductPatterns.FindMany },
+        { ids: productIds },
+      ),
+    );
+
+    if (products.length !== createOrderDto.orderItems.length) {
+      throw new RpcException({
+        code: 404,
+        message: 'One or more products not found',
+      });
+    }
+
     const orderItems = createOrderDto.orderItems.map((item) => {
       return this.orderItemRepository.create({
         productId: item.productId,

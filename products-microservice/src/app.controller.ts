@@ -12,6 +12,11 @@ export class AppController {
     return this.productsService.findAll({ page, limit, sort, order });
   }
 
+  @MessagePattern({ cmd: ProductPatterns.FindMany })
+  findMany(@Payload() { ids }) {
+    return this.productsService.findMany(ids);
+  }
+
   @MessagePattern({ cmd: ProductPatterns.FindOne })
   findOne(@Payload() { id }) {
     return this.productsService.findOne(id);

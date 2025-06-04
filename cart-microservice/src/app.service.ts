@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
 import { lastValueFrom } from 'rxjs';
-import { ProductPatterns } from '@my/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Inject, Injectable } from '@nestjs/common';
+import { ProductPatterns, SERVICES } from '@my/common';
 import { Cart, CartDocument } from './schema/cart.schema';
 import { AddToCartDto, UpdateCartDto } from './dto/cart.dto';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
@@ -11,7 +11,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 export class AppService {
   constructor(
     @InjectModel(Cart.name) private cartModel: Model<CartDocument>,
-    @Inject('PRODUCT_MICROSERVICE')
+    @Inject(SERVICES.PRODUCTS.name)
     private readonly productsMicroservice: ClientProxy,
   ) {}
 

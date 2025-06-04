@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToInstance } from 'class-transformer';
 import { RpcException } from '@nestjs/microservices';
 import { CreateUserDto, UserResponseDto } from '@my/common';
 
@@ -36,7 +35,7 @@ export class UsersService {
     createUserDto.password = hashedPassword; // Set the hashed password in the DTO
     const newUser = this.userRepository.create(createUserDto); // Create a new user instance
     const savedUser = await this.userRepository.save(newUser); // Save the new user to the database
-    
+
     return new UserResponseDto({
       id: savedUser.id,
       name: savedUser.name,
@@ -56,13 +55,16 @@ export class UsersService {
       .take(limit)
       .getMany();
 
-    return users.map((user: User) => new UserResponseDto({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      birthdate: user.birthdate,
-    }));
+    return users.map(
+      (user: User) =>
+        new UserResponseDto({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          birthdate: user.birthdate,
+        }),
+    );
   }
 
   async findOne(id: number): Promise<UserResponseDto | undefined> {

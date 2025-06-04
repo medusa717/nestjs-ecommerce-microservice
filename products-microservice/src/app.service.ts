@@ -1,8 +1,10 @@
-import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Cache } from 'cache-manager';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { PaginatedResponse, CreateProductDto } from '@my/common';
 
 @Injectable()
@@ -10,6 +12,8 @@ export class AppService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>, // User repository
+
+    @Inject(CACHE_MANAGER) private cacheManager: Cache, // CacheManager'ı enjekte edin
   ) {}
 
   async findAll({
@@ -36,13 +40,25 @@ export class AppService {
     };
   }
 
+  async findMany(ids: number[]): Promise<Product[]> {
+    return await this.productRepository.find({
+      where: { id: In(ids) },
+    });
+  }
+
   async findOne(id: number): Promise<Product | undefined> {
+    const cacheKey = `product_${id}`;
+    const cachedProduct = await this.cacheManager.get(cacheKey);
+    if (cachedProduct) return cachedProduct as Product;
+
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product)
       throw new RpcException({
         code: 404,
         message: `Product with id ${id} not found`,
       });
+
+    await this.cacheManager.set(cacheKey, product);
     return product;
   }
 

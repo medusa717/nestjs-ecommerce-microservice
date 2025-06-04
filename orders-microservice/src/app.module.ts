@@ -43,6 +43,7 @@ import { OrdersKafkaProducerService } from './orders-kafka-producer.service';
           },
         },
       },
+      { ...SERVICES_CONFIG('PRODUCTS'), transport: Transport.TCP },
     ]),
   ],
   controllers: [AppController],
