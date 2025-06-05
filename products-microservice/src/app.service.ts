@@ -64,6 +64,8 @@ export class AppService {
 
   async create(product: CreateProductDto): Promise<Product> {
     const newProduct = this.productRepository.create(product);
+    const cacheKey = `product_${newProduct.id}`;
+    await this.cacheManager.set(cacheKey, newProduct);
     return this.productRepository.save(newProduct);
   }
 
@@ -84,6 +86,8 @@ export class AppService {
       ),
     };
 
+    const cacheKey = `product_${id}`;
+    await this.cacheManager.set(cacheKey, updatedProduct);
     return await this.productRepository.save(updatedProduct); // Save the updated user to the database
   }
 
@@ -95,6 +99,8 @@ export class AppService {
         message: `Product with id ${id} not found`,
       });
 
+    const cacheKey = `product_${id}`;
+    await this.cacheManager.del(cacheKey); // Delete the product from the cache
     this.productRepository.delete(id); // Delete the user from the database
     return existingProdcut; // Return the deleted user
   }

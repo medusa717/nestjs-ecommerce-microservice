@@ -31,7 +31,6 @@ import { ProductImage } from './entities/product_image.entity';
           logging: process.env.NODE_ENV === 'development',
           cache: { duration: 1000 },
         };
-        console.log('TypeORM Config:', dbConfig);
         return dbConfig;
       },
     }),
