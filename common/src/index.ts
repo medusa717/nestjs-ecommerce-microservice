@@ -31,3 +31,4 @@ export * from './dto/update-order.dto';
 export * from './dto/order-item.dto';
 export * from './dto/add-to-cart.dto';
 export * from './dto/update-cart.dto';
+export * from './dto/login.dto';

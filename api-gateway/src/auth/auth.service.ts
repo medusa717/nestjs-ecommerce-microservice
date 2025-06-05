@@ -1,8 +1,7 @@
 import { lastValueFrom } from 'rxjs';
-import { LoginDto } from './dto/login.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { UserType, AuthPatterns } from '@my/common';
+import { UserType, AuthPatterns, LoginDto } from '@my/common';
 
 @Injectable()
 export class AuthService {

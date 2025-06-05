@@ -1,8 +1,7 @@
-import { AuthPatterns } from '@my/common';
-import { LoginDto } from './dto/login.dto';
 import { AppService } from './app.service';
 import { Controller } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
+import { AuthPatterns, LoginDto } from '@my/common';
 import { JwtPayload } from './common/types/JwtType';
 import { MessagePattern } from '@nestjs/microservices';
 

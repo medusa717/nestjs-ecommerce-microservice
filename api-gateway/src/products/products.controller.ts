@@ -20,12 +20,25 @@ import {
   Patch,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all products with pagination' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a paginated list of products',
+    type: PaginatedResponse,
+  })
   @UseInterceptors(CacheInterceptor)
   getProducts(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 0,
@@ -37,6 +50,15 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a product by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the product with the specified ID',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found',
+  })
   @UseInterceptors(CacheInterceptor)
   getProduct(@Param('id', ParseIntPipe) id: number) {
     const product = this.productsService.getProduct(id);
@@ -47,6 +69,16 @@ export class ProductsController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create a new product' })
+  @ApiResponse({
+    status: 201,
+    description: 'The product has been successfully created',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Insufficient permissions',
+  })
+  @ApiBearerAuth()
   @UseInterceptors(CacheInterceptor)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
@@ -59,6 +91,20 @@ export class ProductsController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update a product' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully updated',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Insufficient permissions',
+  })
+  @ApiBearerAuth()
   @UseInterceptors(CacheInterceptor)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
@@ -76,6 +122,20 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a product' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Insufficient permissions',
+  })
+  @ApiBearerAuth()
   @UseInterceptors(CacheInterceptor)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)

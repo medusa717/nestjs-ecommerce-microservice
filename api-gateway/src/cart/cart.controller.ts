@@ -11,12 +11,29 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
+@ApiTags('cart')
 @Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get user cart' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the current user cart',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   getCart(@Req() req: any) {
     const userId = req.user.id;
@@ -24,6 +41,20 @@ export class CartController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Add item to cart' })
+  @ApiResponse({
+    status: 201,
+    description: 'Item successfully added to cart',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid cart data',
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   create(@Req() req: any, @Body() dto: AddToCartDto) {
     dto.userId = req.user.id;
@@ -31,6 +62,20 @@ export class CartController {
   }
 
   @Put()
+  @ApiOperation({ summary: 'Update cart items' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cart successfully updated',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid cart data',
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   update(@Req() req: any, @Body() dto: UpdateCartDto) {
     dto.userId = req.user.id;
@@ -38,6 +83,16 @@ export class CartController {
   }
 
   @Delete()
+  @ApiOperation({ summary: 'Delete cart' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cart successfully deleted',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   delete(@Req() req: any) {
     const userId = req.user.id;

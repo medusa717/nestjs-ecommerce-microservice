@@ -5,7 +5,7 @@ import { User } from './entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RpcException } from '@nestjs/microservices';
-import { CreateUserDto, UserResponseDto } from '@my/common';
+import { CreateUserDto, UserResponseDto, UserRole } from '@my/common';
 
 @Injectable()
 export class UsersService {
@@ -31,9 +31,16 @@ export class UsersService {
     const saltRounds = this.configService.get<number>('PASSWORD_SALT', 10);
     const salt = await bcrypt.genSalt(Number(saltRounds));
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt); // Hash the password
+    createUserDto.role =
+      createUserDto.email === 'admin@admin.com' ? 'SUPER_ADMIN' : 'USER'; // Set role based on email for testing
 
-    createUserDto.password = hashedPassword; // Set the hashed password in the DTO
-    const newUser = this.userRepository.create(createUserDto); // Create a new user instance
+    const userData = {
+      ...createUserDto,
+      password: hashedPassword,
+      role: createUserDto.role as UserRole,
+    };
+
+    const newUser = this.userRepository.create(userData); // Create a new user instance
     const savedUser = await this.userRepository.save(newUser); // Save the new user to the database
 
     return new UserResponseDto({

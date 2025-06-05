@@ -1,11 +1,10 @@
 import * as bcrypt from 'bcrypt';
 import { lastValueFrom } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './dto/login.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtPayload } from 'src/common/types/JwtType';
-import { UserPatterns, UserResponseDto, UserType } from '@my/common';
+import { UserPatterns, UserResponseDto, UserType, LoginDto } from '@my/common';
 
 @Injectable()
 export class AppService {
