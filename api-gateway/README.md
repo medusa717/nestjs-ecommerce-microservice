@@ -1,89 +1,187 @@
-# API Gateway
+# API Gateway 🚪
 
-## Overview
+## 📋 Table of Contents
 
-The API Gateway serves as the entry point for all client requests, routing them to appropriate microservices. It handles request/response transformation, authentication, and load balancing.
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
+## 🎯 Overview
 
-- Request routing
-- Authentication middleware
-- Request/response transformation
-- Load balancing
-- Rate limiting
-- API documentation (Swagger)
+The API Gateway serves as the central entry point for all client requests in our microservices architecture. It handles request routing, authentication, and provides a unified interface for clients to interact with various microservices.
 
-## API Endpoints
+## ✨ Features
 
-### Authentication
+- **Request Routing**
 
-- `POST /auth/login` - User login
-- `POST /auth/register` - User registration
+  - Intelligent routing to appropriate microservices
+  - Request/response transformation
 
-### Products
+- **Security**
 
-- `GET /products` - Get all products
-- `GET /products/:id` - Get product by ID
-- `POST /products` - Create product
-- `PUT /products/:id` - Update product
-- `DELETE /products/:id` - Delete product
+  - JWT-based authentication
+  - Role-based authorization
+  - Rate limiting
+  - Request validation
 
-### Orders
+- **Documentation**
 
-- `GET /orders` - Get all orders
-- `GET /orders/:id` - Get order by ID
-- `POST /orders` - Create order
-- `PUT /orders/:id` - Update order
-- `DELETE /orders/:id` - Cancel order
+  - Swagger/OpenAPI integration
+  - Interactive API documentation
+  - Request/response schemas
+  - Authentication flows
 
-### Cart
+## 🏗️ Architecture
 
-- `GET /cart` - Get user's cart
-- `POST /cart/items` - Add item to cart
-- `PUT /cart/items/:itemId` - Update cart item
-- `DELETE /cart/items/:itemId` - Remove item from cart
-
-### Users
-
-- `GET /users` - Get all users
-- `GET /users/:id` - Get user by ID
-- `GET /users/me` - Get current user
-- `POST /users` - Create new user
-- `PUT /users/:id` - Update user
-- `DELETE /users/:id` - Delete user
-
-## Environment Variables
-
-```env
-PORT=3000
-AUTH_SERVICE_HOST=localhost
-AUTH_SERVICE_PORT=3001
-USERS_SERVICE_HOST=localhost
-USERS_SERVICE_PORT=3002
-PRODUCTS_SERVICE_HOST=localhost
-PRODUCTS_SERVICE_PORT=3003
-ORDERS_SERVICE_HOST=localhost
-ORDERS_SERVICE_PORT=3004
-CART_SERVICE_HOST=localhost
-CART_SERVICE_PORT=3005
-NOTIFICATIONS_SERVICE_HOST=localhost
-NOTIFICATIONS_SERVICE_PORT=3006
+```
+Client Request → API Gateway → Microservices
+     ↑              ↓
+     └── Response ←─┘
 ```
 
-## Running the Service
+### Communication Flow
+
+1. Client sends request to API Gateway
+2. Gateway validates and authenticates request
+3. Request is routed to appropriate microservice
+4. Response is transformed and returned to client
+
+## 📚 API Endpoints
+
+### 🔐 Authentication
+
+```http
+POST /auth/login
+POST /auth/register
+POST /auth/verify
+GET  /auth/me
+```
+
+### 👥 Users
+
+```http
+GET    /users
+GET    /users/:id
+GET    /users/me
+POST   /users
+PUT    /users/:id
+DELETE /users/:id
+```
+
+### 📦 Products
+
+```http
+GET    /products
+GET    /products/:id
+POST   /products
+PUT    /products/:id
+DELETE /products/:id
+```
+
+### 🛒 Cart
+
+```http
+GET    /cart
+POST   /cart/items
+PUT    /cart/items/:itemId
+DELETE /cart/items/:itemId
+```
+
+### 📝 Orders
+
+```http
+GET    /orders
+GET    /orders/:id
+POST   /orders
+PUT    /orders/:id
+DELETE /orders/:id
+```
+
+### 🚚 Shipping
+
+```http
+GET    /shipping/:orderId
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+```env
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# JWT Configuration
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRATION=1h
+
+# Rate Limiting
+RATE_LIMIT_WINDOW=15m
+RATE_LIMIT_MAX=100
+```
+
+## 💻 Development
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- Git
+
+### Installation
 
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
+### Docker
 
-- NestJS
-- @nestjs/microservices
-- @nestjs/swagger
-- class-validator
-- class-transformer
+```bash
+# Build Docker image
+docker build -t api-gateway .
+
+# Run container
+docker run -p 3000:3000 api-gateway
+```
+
+## 📦 Dependencies
+
+- **Core**
+
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/swagger
+
+- **Security**
+
+  - @nestjs/jwt
+  - @nestjs/passport
+  - passport-jwt
+
+- **Validation**
+
+  - class-validator
+  - class-transformer
+
+- **Utilities**
+  - rxjs
+  - reflect-metadata
+
+## 📝 License
+
+This project is licensed under the MIT License.

@@ -1,56 +1,100 @@
-# Notifications Microservice
+# Notifications Microservice 📨
 
-## Overview
-The Notifications Microservice handles all system notifications, including order status updates, stock warnings, and user notifications. It integrates with Kafka to receive events from other services.
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
-- Email notifications
-- SMS notifications
-- Push notifications
-- Notification templates
-- Kafka event processing
+## 🎯 Overview
 
-## API Endpoints
+The Notifications Microservice handles all communication channels in our e-commerce platform. It manages email notifications for various events in the system.
 
-### Notifications
-- `GET /notifications` - Get user notifications
-- `POST /notifications` - Send notification
-- `PUT /notifications/:id/read` - Mark notification as read
-- `DELETE /notifications/:id` - Delete notification
+## ✨ Features
 
-## Kafka Events
-### Consumed Events
-- `order_created` - Send order confirmation
-- `order_status_changed` - Send status update
-- `stock_warning` - Send low stock alert
+- **Notification Channels**
+  - Email notifications
 
-## Environment Variables
+- **Templates**
+  - Customizable email templates
+
+- **Delivery Management**
+  - Delivery status tracking
+  - Rate limiting
+  - Queue management
+
+## 🏗️ Architecture
+
+```
+Client → API Gateway → Notifications Service → External Services
+  ↑          ↓            ↓
+  └──────────┴────────────┘
+```
+
+### Notification Flow
+1. Event received from other services
+2. Template selection and rendering
+4. Delivery execution
+5. Status tracking
+
+## ⚙️ Configuration
+
+### Environment Variables
 ```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=notifications_db
-KAFKA_BROKERS=localhost:9092
+# Server Configuration
+PORT=3005
+NODE_ENV=development
+
+# Email Service
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
 SMTP_USER=your_email
 SMTP_PASS=your_password
 ```
 
-## Running the Service
+## 💻 Development
+
+### Prerequisites
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- Redis
+- SMTP Server (for email testing)
+
+### Installation
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
-- NestJS
-- TypeORM
-- PostgreSQL
-- Kafka
-- @nestjs/microservices
-- nodemailer
+### Docker
+```bash
+# Build Docker image
+docker build -t notifications-microservice .
+
+# Run container
+docker run -p 3005:3005 notifications-microservice
+```
+## 📦 Dependencies
+
+- **Core**
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/config
+
+- **Email**
+  - nodemailer
+
+## 📝 License
+
+This project is licensed under the MIT License.

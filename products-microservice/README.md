@@ -1,66 +1,130 @@
-# Products Microservice
+# Products Microservice 🛍️
 
-## Overview
+## 📋 Table of Contents
 
-The Products Microservice is responsible for managing product information, inventory, and stock updates in the e-commerce system. It handles product CRUD operations and integrates with Kafka for stock management.
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
+## 🎯 Overview
 
-- Product management (CRUD operations)
-- Stock management
-- Kafka integration for order events
-- Stock warning notifications
+The Products Microservice manages the product catalog in our e-commerce platform. It handles product information, categories, inventory, and pricing.
 
-## API Endpoints
+## ✨ Features
 
-### Products
+- **Product Management**
 
-- `GET /products` - Get all products (paginated)
-- `GET /products/:id` - Get product by ID
-- `POST /products` - Create new product
-- `PUT /products/:id` - Update product
-- `DELETE /products/:id` - Delete product
+  - Product CRUD operations
+  - Inventory tracking
+  - Product variants
 
-### Stock Management
+- **Performance**
+  - Caching
+  - Pagination
+  - Search optimization
+  - Image handling
 
-- Automatic stock updates via Kafka events
-- Stock warning notifications for low inventory
+## 🏗️ Architecture
 
-## Kafka Events
-
-### Consumed Events
-
-- `order_created` - Updates stock when new order is created
-
-### Produced Events
-
-- `stock_warning` - Emitted when stock is insufficient
-
-## Environment Variables
-
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=products_db
-KAFKA_BROKERS=localhost:9092
+```
+Client → API Gateway → Products Service → Database
+  ↑          ↓            ↓
+  └──────────┴────────────┘
 ```
 
-## Running the Service
+### Product Management Flow
+
+1. Client requests product operation
+2. Service processes request
+3. Database operation performed
+4. Response returned to client
+
+## 📚 API Endpoints
+
+### Product Management
+
+```http
+GET    /products
+GET    /products/:id
+POST   /products
+PUT    /products/:id
+DELETE /products/:id
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+```env
+# Server Configuration
+PORT=3003
+NODE_ENV=development
+
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=products_db
+```
+
+## 💻 Development
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+- Redis
+
+### Installation
 
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
+### Docker
 
-- NestJS
-- TypeORM
-- PostgreSQL
-- Kafka
-- @nestjs/microservices
+```bash
+# Build Docker image
+docker build -t products-microservice .
+
+# Run container
+docker run -p 3003:3003 products-microservice
+```
+
+## 📦 Dependencies
+
+- **Core**
+
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/typeorm
+
+- **Database**
+
+  - typeorm
+  - pg
+
+- **Cache**
+
+  - @nestjs/cache-manager
+  - cache-manager-redis-store
+
+## 📝 License
+
+This project is licensed under the MIT License.

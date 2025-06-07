@@ -1,61 +1,119 @@
-# Stock Microservice
+# Stock Microservice 📦
 
-## Overview
-The Stock Microservice is responsible for managing product stock levels and handling stock-related events. It integrates with Kafka to process order events and communicates with the Products service for stock updates.
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
-- Stock level monitoring
-- Stock warning notifications
-- Kafka event processing
-- Integration with Products service
-- Real-time stock updates
+## 🎯 Overview
 
-## API Endpoints (To Be Implemented)
+The Stock Microservice manages product inventory and stock levels in our e-commerce platform. It handles stock updates, monitors inventory levels, and coordinates with other services to maintain accurate stock information.
 
-### Stock Management
-- `GET /stock/:productId` - Get product stock level
-- `POST /stock/update` - Update product stock
-- `GET /stock/warnings` - Get stock warnings
+## ✨ Features
 
-## Kafka Events
-### Consumed Events
-- `order_created` - Process stock updates for new orders
+- **Stock Management**
+  - Real-time stock tracking
+  - Stock level monitoring
+  - Stock warnings
 
-### Produced Events
-- `stock_warning` - Emitted when stock level is low
+- **Event Processing**
+  - Kafka event consumption
+  - Order event processing
+  - Stock update events
 
-## Environment Variables
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=stock_db
-KAFKA_BROKERS=localhost:9092
-PRODUCTS_SERVICE_HOST=localhost
-PRODUCTS_SERVICE_PORT=3003
+- **Integration**
+  - Products service integration
+  - Orders service integration
+  - Real-time updates
+
+## 🏗️ Architecture
+
+```
+Client → API Gateway → Stock Service → Database
+  ↑          ↓            ↓
+  └──────────┴────────────┘
 ```
 
-## Running the Service
+### Stock Flow
+1. Order event received
+2. Stock level checked
+3. Stock updated
+
+## ⚙️ Configuration
+
+### Environment Variables
+```env
+# Server Configuration
+PORT=3006
+NODE_ENV=development
+
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=stock_db
+
+# Kafka
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=stock-service
+KAFKA_GROUP_ID=stock-group
+```
+
+## 💻 Development
+
+### Prerequisites
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+- Kafka
+
+### Installation
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
-- NestJS
-- TypeORM
-- PostgreSQL
-- Kafka
-- @nestjs/microservices
+### Docker
+```bash
+# Build Docker image
+docker build -t stock-microservice .
 
-## Implementation Status
-- ✅ Basic service setup
-- ✅ Kafka consumer for order_created event
-- ✅ Stock warning event producer
-- ❌ REST API endpoints
-- ❌ Stock level monitoring dashboard
-- ❌ Real-time stock updates
+# Run container
+docker run -p 3006:3006 stock-microservice
+```
+
+## 📦 Dependencies
+
+- **Core**
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/typeorm
+
+- **Database**
+  - typeorm
+  - pg
+
+- **Message Queue**
+  - @nestjs/microservices
+  - kafkajs
+
+- **Validation**
+  - class-validator
+  - class-transformer
+
+## 📝 License
+
+This project is licensed under the MIT License.

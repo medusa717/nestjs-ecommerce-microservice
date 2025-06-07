@@ -1,49 +1,135 @@
-# Users Microservice
+# Users Microservice 👥
 
-## Overview
+## 📋 Table of Contents
 
-The Users Microservice manages user accounts, profiles, and authentication-related data. It provides user management functionality and integrates with the authentication service.
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
+## 🎯 Overview
 
-- User management (CRUD operations)
-- User profile management
-- Address management
-- Integration with Auth service
+The Users Microservice manages user-related operations in our e-commerce platform. It handles account management functionalities.
 
-## API Endpoints
+## ✨ Features
 
-### Users
+- **User Management**
 
-- `GET /users` - Get all users (paginated)
-- `GET /users/:id` - Get user by ID
-- `POST /users` - Create new user
-- `PUT /users/:id` - Update user
-- `DELETE /users/:id` - Delete user
+  - User registration
 
-## Environment Variables
+- **Security**
+  - Data encryption
+  - Input validation
+  - Rate limiting
+  - Access control
 
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=users_db
+## 🏗️ Architecture
+
+```
+Client → API Gateway → Users Service → Database
+  ↑          ↓            ↓
+  └──────────┴────────────┘
 ```
 
-## Running the Service
+### User Management Flow
+
+1. Client requests user operation
+2. Service validates request
+3. Database operation performed
+4. Response returned to client
+
+## 📚 API Endpoints
+
+### User Management
+
+```http
+GET    /users
+GET    /users/:id
+POST   /users
+PUT    /users/:id
+DELETE /users/:id
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+```env
+# Server Configuration
+PORT=3002
+NODE_ENV=development
+
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=users_db
+
+# Security
+RATE_LIMIT_WINDOW=15m
+RATE_LIMIT_MAX=100
+```
+
+## 💻 Development
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+
+### Installation
 
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
+### Docker
 
-- NestJS
-- TypeORM
-- PostgreSQL
-- @nestjs/microservices
+```bash
+# Build Docker image
+docker build -t users-microservice .
+
+# Run container
+docker run -p 3002:3002 users-microservice
+```
+
+## 📦 Dependencies
+
+- **Core**
+
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/typeorm
+
+- **Database**
+
+  - typeorm
+  - pg
+
+- **Validation**
+
+  - class-validator
+  - class-transformer
+
+- **Security**
+  - @nestjs/throttler
+  - helmet
+
+## 📝 License
+
+This project is licensed under the MIT License.

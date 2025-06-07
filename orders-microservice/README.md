@@ -1,58 +1,131 @@
-# Orders Microservice
+# Orders Microservice 🛒
 
-## Overview
+## 📋 Table of Contents
 
-The Orders Microservice manages the order processing system, handling order creation, updates, and status management. It integrates with Kafka to notify other services about order events.
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
+## 🎯 Overview
 
-- Order management (CRUD operations)
-- Order status tracking
-- Kafka event publishing
-- Integration with Products service for stock management
+The Orders Microservice manages the order processing system in our e-commerce platform. It handles order creation, tracking, and status management while coordinating with other microservices.
 
-## API Endpoints
+## ✨ Features
 
-### Orders
+- **Order Management**
 
-- `GET /orders` - Get all orders (paginated)
-- `GET /orders/:id` - Get order by ID
-- `POST /orders` - Create new order
-- `PUT /orders/:id` - Update order status
-- `DELETE /orders/:id` - Cancel order
+  - Order creation and processing
+  - Order status tracking
 
-## Kafka Events
+- **Integration**
+  - Product service integration
+  - User service integration
+  - Notification service integration
 
-### Produced Events
+## 🏗️ Architecture
 
-- `order_created` - Emitted when a new order is created
-- `order_status_changed` - Emitted when order status changes
-
-## Environment Variables
-
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=orders_db
-KAFKA_BROKERS=localhost:9092
+```
+Client → API Gateway → Orders Service → Database
+  ↑          ↓            ↓
+  └──────────┴────────────┘
 ```
 
-## Running the Service
+### Order Processing Flow
+
+1. Client creates order
+2. Service validates order
+3. Status updates
+
+## 📚 API Endpoints
+
+### Order Management
+
+```http
+GET    /orders
+GET    /orders/:id
+POST   /orders
+PUT    /orders/:id
+DELETE /orders/:id
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+```env
+# Server Configuration
+PORT=3004
+NODE_ENV=development
+
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=orders_db
+
+# Kafka
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=orders-service
+```
+
+## 💻 Development
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+- Kafka
+
+### Installation
 
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
+### Docker
 
-- NestJS
-- TypeORM
-- PostgreSQL
-- Kafka
-- @nestjs/microservices
+```bash
+# Build Docker image
+docker build -t orders-microservice .
+
+# Run container
+docker run -p 3004:3004 orders-microservice
+```
+
+## 📦 Dependencies
+
+- **Core**
+
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/typeorm
+
+- **Database**
+
+  - typeorm
+  - pg
+
+- **Message Queue**
+
+  - @nestjs/microservices
+  - kafkajs
+
+## 📝 License
+
+This project is licensed under the MIT License.

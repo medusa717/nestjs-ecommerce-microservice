@@ -1,52 +1,148 @@
-# Auth Microservice
+# Auth Microservice 🔐
 
-## Overview
+## 📋 Table of Contents
 
-The Auth Microservice handles user authentication and authorization. It manages JWT tokens, user sessions, and provides secure access to other microservices.
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
+## 🎯 Overview
 
-- User authentication (login/logout)
-- JWT token management
-- Role-based access control
-- Session management
-- Integration with Users service
+The Auth Microservice is responsible for handling user authentication and authorization in our e-commerce platform. It manages JWT token generation, validation, and user session management.
 
-## API Endpoints
+## ✨ Features
+
+- **Authentication**
+
+  - JWT token generation and validation
+  - User login and registration
+  - Password hashing and validation
+  - Session management
+
+- **Authorization**
+
+  - Role-based access control
+  - Permission management
+  - Token refresh mechanism
+
+- **Security**
+  - Password encryption
+  - Request validation
+
+## 🏗️ Architecture
+
+```
+Client → API Gateway → Auth Service → Database
+  ↑          ↓            ↓
+  └──────────┴────────────┘
+```
+
+### Authentication Flow
+
+1. Client sends credentials
+2. Service validates credentials
+3. JWT token is generated
+4. Token is returned to client
+
+## 📚 API Endpoints
 
 ### Authentication
 
-- `POST /auth/login` - User login
-- `POST /auth/refresh` - Refresh access token
-
-## Environment Variables
-
-```env
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=auth_db
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRATION=1h
+```http
+POST /auth/login
+POST /auth/verify
+GET  /auth/me
 ```
 
-## Running the Service
+## ⚙️ Configuration
+
+### Environment Variables
+
+```env
+# Server Configuration
+PORT=3001
+NODE_ENV=development
+
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=auth_db
+
+# JWT
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRATION=1h
+JWT_REFRESH_EXPIRATION=7d
+
+# Security
+PASSWORD_SALT=10
+RATE_LIMIT_WINDOW=15m
+RATE_LIMIT_MAX=100
+```
+
+## 💻 Development
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+
+### Installation
 
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
+### Docker
 
-- NestJS
-- TypeORM
-- PostgreSQL
-- @nestjs/jwt
-- @nestjs/passport
-- passport-jwt
-- @nestjs/microservices
+```bash
+# Build Docker image
+docker build -t auth-microservice .
+
+# Run container
+docker run -p 3001:3001 auth-microservice
+```
+
+## 📦 Dependencies
+
+- **Core**
+
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/typeorm
+
+- **Security**
+
+  - @nestjs/jwt
+  - @nestjs/passport
+  - passport-jwt
+  - bcrypt
+
+- **Database**
+
+  - typeorm
+  - pg
+
+- **Validation**
+  - class-validator
+  - class-transformer
+
+## 📝 License
+
+This project is licensed under the MIT License.

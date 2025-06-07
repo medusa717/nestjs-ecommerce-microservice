@@ -1,55 +1,122 @@
-# Nest E-commerce Microservice Architecture
+# Nest E-commerce Microservice Architecture 🚀
 
-## Overview
+## 📋 Table of Contents
 
-This project is a scalable, modular e-commerce platform built with NestJS microservices. It enables online shopping, user management, order processing, inventory tracking, and real-time notifications, all orchestrated through a modern distributed architecture.
+-   [Overview](#overview)
+-   [Technologies](#technologies)
+-   [Microservices](#microservices)
+-   [Features](#features)
+-   [Installation](#installation)
+-   [API Documentation](#api-documentation)
 
-### Key Features
+## 🎯 Overview
 
--   Modular microservice architecture for scalability and maintainability
--   Centralized API Gateway for unified client access
--   Secure authentication and authorization
--   Product catalog and inventory management
--   Shopping cart and order processing
--   Real-time notifications via Kafka
--   Containerized deployment with Docker & Docker Compose
--   RESTful API design with TypeScript
+This project is an e-commerce platform developed using modern microservice architecture and Event Driven Architecture. Each microservice operates independently and is orchestrated using Docker Compose.
 
-## Architecture
-
-The system consists of the following microservices:
-
--   **API Gateway**: Entry point for all client requests, handles routing and request aggregation
-    -   [Detailed Documentation](./api-gateway/README.md)
--   **Auth Microservice**: Manages user authentication and authorization
-    -   [Detailed Documentation](./auth-microservice/README.md)
--   **Users Microservice**: Handles user management and profiles
-    -   [Detailed Documentation](./users-microservice/README.md)
--   **Products Microservice**: Manages product catalog and inventory
-    -   [Detailed Documentation](./products-microservice/README.md)
--   **Cart Microservice**: Handles shopping cart operations
-    -   [Detailed Documentation](./cart-microservice/README.md)
--   **Orders Microservice**: Processes and manages orders
-    -   [Detailed Documentation](./orders-microservice/README.md)
--   **Stock Microservice**: Manages product stock levels
-    -   [Detailed Documentation](./stock-microservice/README.md)
--   **Shipping Microservice**: Handles shipping and delivery operations
-    -   [Detailed Documentation](./shipping-microservice/README.md)
--   **Notifications Microservice**: Manages system notifications and alerts
-    -   [Detailed Documentation](./notifications-microservice/README.md)
-
-## Technology Stack
+## 🛠️ Technologies
 
 -   **Framework**: NestJS
--   **Language**: TypeScript
 -   **Databases**:
-    -   PostgreSQL (Primary database for most microservices)
-    -   MongoDB (Used for specific microservices requiring document storage)
+    -   PostgreSQL (Users, Products, Orders)
+    -   MongoDB (Cart)
 -   **Message Broker**: Apache Kafka
--   **Containerization**: Docker
--   **Orchestration**: Docker Compose
+-   **Cache**: Redis
+-   **Authentication**: JWT
+-   **API Documentation**: Swagger/OpenAPI
+-   **Containerization**: Docker & Docker Compose
+-   **Communication**: TCP (Microservices), REST (API Gateway)
 
-## Getting Started
+## 🏗️ Microservices
+
+### 🔐 Auth Microservice
+
+-   JWT token generation and validation
+-   Login, me, and verify endpoints
+-   User authentication
+
+### 👥 Users Microservice
+
+-   User CRUD operations
+-   PostgreSQL database
+-   Role-based authorization
+
+### 📦 Products Microservice
+
+-   Product CRUD operations
+-   PostgreSQL database
+-   Product-image relationship (One-to-Many)
+-   Search, sorting, and pagination
+-   Redis caching
+-   Stock updates via TCP
+
+### 🛒 Cart Microservice
+
+-   Cart CRUD operations
+-   MongoDB database
+-   User-based cart management
+
+### 📝 Orders Microservice
+
+-   Order CRUD operations
+-   PostgreSQL database
+-   Kafka event publishing (order_created)
+
+### 📊 Stock Microservice
+
+-   Stock management
+-   Kafka event listening (order_created)
+-   TCP communication with Products microservice
+
+### 🚚 Shipping Microservice
+
+-   Shipping process management
+-   Kafka event listening (order_created)
+-   Dummy data for shipping tracking
+
+### 🔔 Notifications Microservice
+
+-   Order notifications
+-   Kafka event listening (order_created)
+-   Email notifications
+
+## ✨ Features
+
+-   **Microservice Architecture**
+
+    -   Independent service development
+    -   Docker Compose orchestration
+    -   Service isolation
+
+-   **Event Driven Architecture**
+
+    -   Event publishing and listening with Kafka
+    -   Asynchronous communication
+    -   Service independence
+
+-   **API Gateway**
+
+    -   Central entry point
+    -   Guard protection
+    -   Request routing
+
+-   **Database Management**
+
+    -   PostgreSQL (Relational data)
+    -   MongoDB (Document-based data)
+    -   Redis (Caching)
+
+-   **Security**
+
+    -   JWT-based authentication
+    -   Guard protection
+    -   Role-based authorization
+
+-   **Performance**
+    -   Redis caching
+    -   Database optimization
+    -   Microservice isolation
+
+## 🚀 Installation
 
 ### Prerequisites
 
@@ -57,92 +124,44 @@ The system consists of the following microservices:
 -   Docker and Docker Compose
 -   Git
 
-### Installation
+### Steps
 
-1.  Clone the repository:
-
-    ```bash
-    git clone https://gitlab.com/onurcansevinc/nest-ecommerce-microservice.git
-    cd nest-ecommerce-microservice
-    ```
-
-2.  Install dependencies for each microservice:
-
-    ```bash
-    # Navigate to each microservice directory and run:
-    npm install
-    ```
-
-3.  Start the services using Docker Compose:
-
-    ```bash
-    docker-compose up -d
-    ```
-
-## Development
-
-### Running Services Locally
-
-Each microservice can be run independently for development:
+1. Clone the repository:
 
 ```bash
-# Example for running the auth service
-cd auth-microservice
-npm run start:dev
+git clone https://gitlab.com/onurcansevinc/nest-ecommerce-microservice.git
+cd nest-ecommerce-microservice
 ```
 
-### Environment Configuration
+2. Configure environment variables:
 
-Each microservice has its own `.env` file. Make sure to set up the required environment variables before running the services.
-
-### Database Configuration
-
-The project uses multiple databases:
-
--   PostgreSQL runs on port 5432
--   MongoDB runs on port 27017
-
-Make sure to set the following environment variables for PostgreSQL:
-
--   POSTGRES_USER
--   POSTGRES_PASSWORD
--   POSTGRES_DB
-
-## Features
-
--   Microservice-based architecture for better scalability
--   Event-driven communication using Kafka
--   Containerized deployment with Docker
--   TypeScript for type safety and better developer experience
--   RESTful API design
--   Centralized API Gateway for request routing
--   Distributed authentication and authorization
--   Real-time notifications
--   Order processing and management
--   Inventory and stock management
--   Shopping cart functionality
--   User management system
-
-## Project Structure
-
-```
-├── api-gateway/           # API Gateway service
-├── auth-microservice/     # Authentication service
-├── users-microservice/    # User management service
-├── products-microservice/ # Product catalog service
-├── cart-microservice/     # Shopping cart service
-├── orders-microservice/   # Order processing service
-├── stock-microservice/    # Inventory management service
-├── shipping-microservice/ # Shipping service
-├── notifications-microservice/ # Notification service
-├── common/               # Shared utilities and types
-└── docker-compose.yml    # Docker compose configuration
+```bash
+cp .env.example .env
+# Edit the .env file
 ```
 
-## API Documentation
+3. Start with Docker:
 
-Each microservice exposes its own API endpoints. The API Gateway provides a unified interface for all client requests. Detailed API documentation can be found in each microservice's documentation.
+```bash
+docker-compose up -d
+```
 
-## Support
+## 📚 API Documentation
 
-For any questions or issues, please create an issue in the GitLab repository.
+Access Swagger UI at:
+
+```
+http://localhost:3000/api
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.

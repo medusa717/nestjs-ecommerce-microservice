@@ -1,58 +1,113 @@
-# Shipping Microservice
+# Shipping Microservice 🚚
 
-## Overview
-The Shipping Microservice manages the shipping process for orders, handling shipping status updates and notifications. It integrates with Kafka to process order events and maintains shipping records in MongoDB.
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [Development](#development)
 
-## Features
-- Shipping status management
-- Shipping record tracking
-- Kafka event processing
-- Shipping notifications
-- MongoDB integration
+## 🎯 Overview
 
-## API Endpoints (To Be Implemented)
+The Shipping Microservice manages the shipping process in our e-commerce platform. It handles tracking, and delivery status updates while coordinating with other services.
 
-### Shipping Management
-- `GET /shipping/:orderId` - Get shipping details for an order
-- `PUT /shipping/:orderId/status` - Update shipping status
-- `GET /shipping/user/:userId` - Get user's shipping history
+## ✨ Features
 
-## Kafka Events
-### Consumed Events
-- `order_created` - Create shipping record for new orders
+- **Shipping Management**
+  - Delivery tracking
 
-### Produced Events
-- `shipping_created` - Emitted when shipping record is created
-- `shipping_status_changed` - Emitted when shipping status changes
+- **Integration**
+  - Orders service integration
+  - Real-time updates
 
-## Environment Variables
-```env
-MONGODB_URI=mongodb://localhost:27017/shipping
-KAFKA_BROKERS=localhost:9092
+- **Tracking**
+  - Delivery status updates
+
+## 🏗️ Architecture
+
+```
+Client → API Gateway → Shipping Service → Database
+  ↑          ↓            ↓
+  └──────────┴────────────┘
 ```
 
-## Running the Service
+### Shipping Flow
+1. Order received
+2. Tracking generated
+
+## ⚙️ Configuration
+
+### Environment Variables
+```env
+# Server Configuration
+PORT=3007
+NODE_ENV=development
+
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=shipping_db
+
+# Kafka
+KAFKA_BROKERS=localhost:9092
+KAFKA_CLIENT_ID=shipping-service
+KAFKA_GROUP_ID=shipping-group
+```
+
+## 💻 Development
+
+### Prerequisites
+- Node.js (v16 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+- Kafka
+
+### Installation
 ```bash
 # Install dependencies
 npm install
 
-# Start the service
+# Start development server
 npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Dependencies
-- NestJS
-- MongoDB
-- Mongoose
-- Kafka
-- @nestjs/microservices
+### Docker
+```bash
+# Build Docker image
+docker build -t shipping-microservice .
 
-## Implementation Status
-- ✅ Basic service setup
-- ✅ MongoDB integration
-- ✅ Kafka consumer for order_created event
-- ✅ Shipping record creation
-- ❌ REST API endpoints
-- ❌ Shipping status management
-- ❌ Shipping notifications
-- ❌ Shipping tracking system
+# Run container
+docker run -p 3007:3007 shipping-microservice
+```
+
+## 📦 Dependencies
+
+- **Core**
+  - @nestjs/core
+  - @nestjs/common
+  - @nestjs/microservices
+  - @nestjs/typeorm
+
+- **Database**
+  - typeorm
+  - pg
+
+- **Message Queue**
+  - @nestjs/microservices
+  - kafkajs
+
+- **Validation**
+  - class-validator
+  - class-transformer
+
+## 📝 License
+
+This project is licensed under the MIT License.
