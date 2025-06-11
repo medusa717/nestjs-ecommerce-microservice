@@ -25,23 +25,29 @@ This project is an e-commerce platform developed using modern microservice archi
 -   **API Documentation**: Swagger/OpenAPI
 -   **Containerization**: Docker & Docker Compose
 -   **Communication**: TCP (Microservices), REST (API Gateway)
+-   **Core Components**:
+    -   [Common Library README](./common/README.md)
+    -   [API Gateway README](./api-gateway/README.md)
 
 ## 🏗️ Microservices
 
 ### 🔐 Auth Microservice
 
+-   [Auth Microservice README](./auth-microservice/README.md)
 -   JWT token generation and validation
 -   Login, me, and verify endpoints
 -   User authentication
 
 ### 👥 Users Microservice
 
+-   [Users Microservice README](./users-microservice/README.md)
 -   User CRUD operations
 -   PostgreSQL database
 -   Role-based authorization
 
 ### 📦 Products Microservice
 
+-   [Products Microservice README](./products-microservice/README.md)
 -   Product CRUD operations
 -   PostgreSQL database
 -   Product-image relationship (One-to-Many)
@@ -51,30 +57,35 @@ This project is an e-commerce platform developed using modern microservice archi
 
 ### 🛒 Cart Microservice
 
+-   [Cart Microservice README](./cart-microservice/README.md)
 -   Cart CRUD operations
 -   MongoDB database
 -   User-based cart management
 
 ### 📝 Orders Microservice
 
+-   [Orders Microservice README](./orders-microservice/README.md)
 -   Order CRUD operations
 -   PostgreSQL database
 -   Kafka event publishing (order_created)
 
 ### 📊 Stock Microservice
 
+-   [Stock Microservice README](./stock-microservice/README.md)
 -   Stock management
 -   Kafka event listening (order_created)
 -   TCP communication with Products microservice
 
 ### 🚚 Shipping Microservice
 
+-   [Shipping Microservice README](./shipping-microservice/README.md)
 -   Shipping process management
 -   Kafka event listening (order_created)
 -   Dummy data for shipping tracking
 
 ### 🔔 Notifications Microservice
 
+-   [Notifications Microservice README](./notifications-microservice/README.md)
 -   Order notifications
 -   Kafka event listening (order_created)
 -   Email notifications
