@@ -1,22 +1,21 @@
 import { Type } from 'class-transformer';
-import { OrderItemDto } from './order-item.dto';
-import { IsArray, IsNotEmpty, IsNumber, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { OrderItemDto } from './order-item.dto';
+import { IsArray, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateOrderDto {
-    @ApiProperty({ description: 'The items in the order', type: [Object] })
+    @IsNumber()
+    @IsNotEmpty()
+    @ApiProperty({ description: 'The total price of the items', example: 1 })
+    totalPrice: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @ApiProperty({ description: 'The user id', example: 1 })
+    userId: number;
+
     @IsArray()
-    @ValidateNested({ each: true })
     @Type(() => OrderItemDto)
-    items: OrderItemDto[];
-
-    @ApiProperty({ description: 'The shipping address ID', example: 1 })
-    @IsNumber()
-    @IsNotEmpty()
-    shippingAddressId: number;
-
-    @ApiProperty({ description: 'The payment method ID', example: 1 })
-    @IsNumber()
-    @IsNotEmpty()
-    paymentMethodId: number;
+    @ApiProperty({ description: 'The items in the order', type: [Object] })
+    orderItems: OrderItemDto[];
 }
