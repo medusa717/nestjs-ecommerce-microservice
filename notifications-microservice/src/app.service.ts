@@ -41,7 +41,6 @@ export class AppService {
   }
 
   async orderCreatedEventHandler(orderCreatedEvent: OrderCreatedEvent) {
-    return;
     const user = (await lastValueFrom(
       this.usersMicroservice.send(
         { cmd: UserPatterns.FindOne },
